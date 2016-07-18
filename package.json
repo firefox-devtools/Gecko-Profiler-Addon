@@ -12,7 +12,11 @@
   "keywords": [
     "jetpack"
   ],
-  "devDependencies": {
-    "redux": "^3.0.5"
-  }
+  "preferences": [{
+    "name": "reportUrl",
+    "title": "Reporter URL",
+    "description": "Collected profiles get posted to this URL",
+    "type": "string",
+    "value": "http://localhost:4242/"
+  }]
 }

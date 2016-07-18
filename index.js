@@ -6,6 +6,7 @@ const { Hotkey } = require("sdk/hotkeys");
 const tabs = require("sdk/tabs");
 const { viewFor } = require("sdk/view/core");
 const { getBrowserForTab } = require("sdk/tabs/utils");
+const { prefs } = require("sdk/simple-prefs");
 
 // a dummy function, to show how tests work.
 // to see how to test this function, look at test/test-index.js
@@ -76,7 +77,7 @@ function collectProfile() {
   var profilePromise = profiler.getProfile();
   var tabOpenPromise = new Promise((resolve, reject) => {
     tabs.open({
-      url: `http://localhost:4242/`,
+      url: preferences.reportUrl,
       onReady: resolve
     });
   });
