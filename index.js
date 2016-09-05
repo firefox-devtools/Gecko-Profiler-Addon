@@ -77,7 +77,7 @@ function collectProfile() {
   var profilePromise = profiler.getProfile();
   var tabOpenPromise = new Promise((resolve, reject) => {
     tabs.open({
-      url: preferences.reportUrl,
+      url: prefs.reportUrl,
       onReady: resolve
     });
   });
