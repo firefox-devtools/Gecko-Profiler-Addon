@@ -2,7 +2,7 @@
   "title": "Gecko Profiler",
   "name": "gecko-profiler",
   "version": "0.0.1",
-  "description": "Collect platform profiles from Firefox Desktop, Firefox for Android and Firefox OS.",
+  "description": "Collect platform profiles from Firefox Desktop and from Firefox for Android.",
   "main": "index.js",
   "author": "Markus Stange <mstange@themasta.com>",
   "engines": {
@@ -12,11 +12,22 @@
   "keywords": [
     "jetpack"
   ],
-  "preferences": [{
-    "name": "reportUrl",
-    "title": "Reporter URL",
-    "description": "Collected profiles get posted to this URL",
-    "type": "string",
-    "value": "http://localhost:4242/"
-  }]
+  "preferences": [
+    {
+      "name": "reportUrl",
+      "title": "Reporter URL",
+      "description": "Collected profiles get posted to this URL",
+      "type": "string",
+      "value": "http://localhost:4242/"
+    }
+  ],
+  "devDependencies": {
+    "jpm": "^1.2.2"
+  },
+  "scripts": {
+    "start": "jpm run",
+    "test": "jpm test",
+    "start-mac-nightly": "jpm run --binary /Applications/FirefoxNightly.app",
+    "test-mac-nightly": "jpm test --binary /Applications/FirefoxNightly.app"
+  }
 }
