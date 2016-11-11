@@ -1,2 +1,4 @@
-
 sdk/
+gecko-profiler.xpi
+node_modules/
+npm-debug.log
