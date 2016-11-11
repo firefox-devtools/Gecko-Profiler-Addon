@@ -135,6 +135,7 @@ function collectProfile() {
   }).catch(error => {
     console.log("error getting profile:");
     console.log(error)
+    tabOpenPromise.then(tab => tab.url = `data:text/html,${error}`);
   });
 }
 
