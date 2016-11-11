@@ -5,6 +5,7 @@
   "description": "Collect platform profiles from Firefox Desktop and from Firefox for Android.",
   "main": "index.js",
   "author": "Markus Stange <mstange@themasta.com>",
+  "icon": "icon.png",
   "engines": {
     "firefox": ">=38.0a1"
   },
