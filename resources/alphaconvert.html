@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>What the fuck Pixelmator, I just want to convert a grayscale layer to an alpha mask, is that so hard</title>
+
+<img id="img" src="grayscale.png">
+
+<svg height="0">
+  <defs>
+    <filter id="grayscaleToAlpha" color-interpolation-filters="sRGB">
+      <feColorMatrix type="luminanceToAlpha" />
+    </filter>
+  </defs>
+<script>
+
+window.onload = () => {
+  const img = document.querySelector('img');
+  const c = document.createElement('canvas');
+  c.width = img.width;
+  c.height = img.height;
+  const ctx = c.getContext('2d');
+  ctx.filter = 'url(#grayscaleToAlpha)';
+  ctx.drawImage(img, 0, 0);
+  document.body.appendChild(c);
+}
+
+</script>

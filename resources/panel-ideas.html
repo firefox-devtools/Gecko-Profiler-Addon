@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+html {
+  background: rgb(250,250,250);
+  font: message-box;
+  -moz-user-select: none;
+  cursor: default;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+}
+
+.status-running {
+  margin: 0;
+  background: hsl(90, 70%, 70%);
+  padding: 10px 4px;
+  position: relative;
+}
+
+.status-running::before {
+  content: '';
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  background: hsl(90, 80%, 40%);
+  border-radius: 100%;
+  vertical-align: top;
+  margin: -2px 3px -20px;
+  /* animation: pulse 800ms alternate infinite ease-in-out; */
+}
+
+@keyframes pulse {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1.0;
+  }
+}
+
+#button-cancel {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  padding: 1.5px;
+  border: 0.5px solid hsl(90, 40%, 50%);
+  background: rgba(0,0,0,0.08);
+  border-radius: 2px;
+  color: hsl(90, 80%, 20%);
+}
+
+#button-cancel:hover {
+  background: linear-gradient(hsl(0, 95%, 68%), hsl(0, 95%, 58%));
+  border-color: hsl(0, 90%, 30%);
+  box-shadow: inset 0 0.5px hsla(0,0%,100%,0.3);
+  color: black;
+}
+
+#button-cancel:hover:active {
+  background: linear-gradient(hsl(0, 90%, 50%), hsl(0, 90%, 45%));
+  border-color: hsl(0, 90%, 30%);
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.15);
+  color: black;
+}
+
+#button-capture {
+  margin-top: 1px;
+  width: 100%;
+  height: auto;
+  text-align: left;
+  padding: 10px 4px;
+  padding-left: 32px;
+  border: 1px solid transparent;
+  background: transparent;
+  display: block;
+  position: relative;
+}
+
+#button-capture:hover {
+  background: #EEE;
+  border-color: #DDD;
+}
+
+#button-capture:hover:active {
+  background: #DDD;
+  border-color: #CCC;
+}
+
+#capture-label {
+  display: flex;
+  flex-flow: row nowrap;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+#capture-label::before {
+  content: '📷';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 20px;
+}
+
+.keyboard-hint {
+  font-size: 1rem;
+  font-weight: normal;
+  flex: 1;
+  text-align: center;
+}
+
+kbd {
+  background-color: #F6F6F6;
+  border: 1px solid #CCC;
+  border-radius: 0.2em;
+  display: inline-block;
+  padding: 0.1em 0.35em;
+  box-shadow: 0 0.1em 0 #BBB;
+  margin: 0 0.15em;
+  font-family: inherit;
+}
+
+#button-capture:hover:active > #capture-label::before {
+  content: '📸';
+}
+
+#help-capture {
+  margin: 0;
+}
+
+.info-density {
+  margin: 4px 12px;
+  display: grid;
+  grid-template-columns: 7em auto;
+  grid-template-rows: auto;
+}
+
+.info-density > dt {
+  grid-column: 1;
+  padding: 2px 0;
+}
+
+.info-density > dd {
+  grid-column: 2;
+  margin: 0;
+  padding: 5px 0 3px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 100%;
+  font-weight: normal;
+  padding: 1px 10px;
+}
+
+.discrete-level {
+  display: flex;
+  height: 100%;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.discrete-level-notch {
+  flex: 1;
+  margin-right: 1px;
+  border: 1px solid rgba(0,0,0,0.2);
+  border-radius: 2px;
+}
+
+.discrete-level-notch.normal.active {
+  border-color: hsl(90, 90%, 40%);
+  background-color: hsla(90, 90%, 40%, 0.5);
+}
+
+.discrete-level-notch.warning.active {
+  border-color: hsl(45, 100%, 49%);
+  background-color: hsla(45, 100%, 49%, 0.5);
+}
+
+.discrete-level-notch.critical.active {
+  border-color: hsl(0, 90%, 40%);
+  background-color: hsla(0, 90%, 40%, 0.5);
+}
+
+.relevancy-level {
+  height: 100%;
+  margin-right: 1px;
+  background: repeating-linear-gradient(to right, #DDD, #DDD 2px, transparent 0, transparent 3px) top left no-repeat;
+  background-size: 400px 20px;
+}
+
+.relevancy-level-fill {
+  height: 100%;
+  width: 40%;
+  background: repeating-linear-gradient(to right, #333, #333 2px, transparent 0, transparent 3px) top left no-repeat;
+  background-size: 400px 20px;
+}
+
+</style>
+
+<body>
+
+<p class="status-running">
+  The profiler is recording.
+  <input type="button" id="button-cancel" value="Discard &amp; Stop">
+</p>
+
+<!--<input type="button" value="Start Profiler">-->
+<button id="button-capture">
+  <strong id="capture-label">Capture Profile <span class="keyboard-hint"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>6</kbd></strong>
+  <p id="help-capture">Capture the current contents of the profile buffer and open the profile in a new tab.</p>
+</button>
+<!--
+<dl class="info-density">
+  <dt>Overhead:</dt>
+  <dd>
+    <div class="discrete-level">
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch warning active"></span>
+      <span class="discrete-level-notch warning active"></span>
+      <span class="discrete-level-notch warning active"></span>
+      <span class="discrete-level-notch warning active"></span>
+      <span class="discrete-level-notch warning inactive"></span>
+      <span class="discrete-level-notch warning inactive"></span>
+      <span class="discrete-level-notch warning inactive"></span>
+      <span class="discrete-level-notch critical inactive"></span>
+      <span class="discrete-level-notch critical inactive"></span>
+      <span class="discrete-level-notch critical inactive"></span>
+      <span class="discrete-level-notch critical inactive"></span>
+      <span class="discrete-level-notch critical inactive"></span>
+      <span class="discrete-level-notch critical inactive"></span>
+    </div>
+  </dd>
+  <dt>Information:</dt>
+  <dd>
+    <div class="relevancy-level">
+      <div class="relevancy-level-fill"></div>
+    </div>
+  </dd>
+</dl>
+
+<div class="settings">
+  <strong id="settings-label">Settings</strong>
+</div>-->
