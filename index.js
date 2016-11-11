@@ -7,6 +7,7 @@ const tabs = require("sdk/tabs");
 const { viewFor } = require("sdk/view/core");
 const { getBrowserForTab } = require("sdk/tabs/utils");
 const { prefs } = require("sdk/simple-prefs");
+const { ToggleButton } = require('sdk/ui/button/toggle');
 
 // a dummy function, to show how tests work.
 // to see how to test this function, look at test/test-index.js
@@ -50,6 +51,16 @@ function toggleProfilerStartStop() {
     }
   })
 }
+
+const button = ToggleButton({
+  id: 'gecko-profiler',
+  label: 'Gecko Profiler',
+  icon: self.data.url('img/toolbar_off.png'),
+});
+
+profiler.addIsRunningObserver(isRunning => {
+  button.icon = isRunning ? self.data.url('img/toolbar_on.png') : self.data.url('img/toolbar_off.png');
+});
 
 function makeProfileAvailableToTab(profile, tab) {
   const browser = getBrowserForTab(viewFor(tab));
