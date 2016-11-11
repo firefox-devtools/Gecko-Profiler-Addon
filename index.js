@@ -8,6 +8,7 @@ const { viewFor } = require("sdk/view/core");
 const { getBrowserForTab } = require("sdk/tabs/utils");
 const { prefs } = require("sdk/simple-prefs");
 const { ToggleButton } = require('sdk/ui/button/toggle');
+const { Panel } = require("sdk/panel");
 
 // a dummy function, to show how tests work.
 // to see how to test this function, look at test/test-index.js
@@ -52,14 +53,48 @@ function toggleProfilerStartStop() {
   })
 }
 
+const panel = Panel({
+  width: 280,
+  height: 109,
+  contentURL: self.data.url('panel.html'),
+  contentScriptFile: self.data.url('panel.js'),
+  onHide: () => {
+    try {
+      button.state('window', { checked: false });
+    } catch (e) {}
+  },
+});
+
 const button = ToggleButton({
   id: 'gecko-profiler',
   label: 'Gecko Profiler',
   icon: self.data.url('img/toolbar_off.png'),
+  onChange: (state) => {
+    if (state.checked) {
+      panel.show({ position: button });
+    }
+  },
 });
 
 profiler.addIsRunningObserver(isRunning => {
   button.icon = isRunning ? self.data.url('img/toolbar_on.png') : self.data.url('img/toolbar_off.png');
+  panel.port.emit('ProfilerStateUpdated', { isRunning });
+});
+
+panel.port.on('ProfilerControlEvent', e => {
+  switch (e.type) {
+    case 'StartProfiler':
+      startProfiler();
+      break;
+    case 'StopProfiler':
+      profiler.stop();
+      break;
+    case 'CaptureProfile':
+      panel.hide();
+      collectProfile();
+      break;
+    default:
+  }
 });
 
 function makeProfileAvailableToTab(profile, tab) {

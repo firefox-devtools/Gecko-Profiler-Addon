@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html class="status-running">
+<meta charset="utf-8">
+<title>Gecko profiler panel</title>
+<style>
+
+html {
+  background: rgb(250,250,250);
+  font: message-box;
+  -moz-user-select: none;
+  cursor: default;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+}
+
+.status-display {
+  margin: 0;
+  padding: 10px 4px;
+  position: relative;
+}
+
+.status-display::before {
+  content: '';
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  vertical-align: top;
+  margin: -2px 3px -20px;
+}
+
+:root.status-stopped .status-display:not(.status-display-stopped) { display: none; }
+:root.status-running .status-display:not(.status-display-running) { display: none; }
+
+.status-display-stopped {
+  background: hsl(210, 80%, 85%);
+}
+
+.status-display-running {
+  background: hsl(90, 70%, 70%);
+}
+
+.status-display-stopped::before {
+  background: hsl(210, 70%, 60%);
+}
+
+.status-display-running::before {
+  background: hsl(90, 80%, 40%);
+  border-radius: 100%;
+}
+
+.status-display-button {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  padding: 1.5px;
+  border: 0.5px solid transparent;
+  border-radius: 2px;
+}
+
+.status-display-button:hover {
+  box-shadow: inset 0 0.5px hsla(0,0%,100%,0.3);
+  color: black;
+}
+
+.status-display-button:hover:active {
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.button-start {
+  border-color: hsl(210, 30%, 60%);
+  background: rgba(0,0,0,0.08);
+  color: hsl(210, 80%, 20%);
+}
+
+.button-cancel {
+  border-color: hsl(90, 40%, 50%);
+  background: rgba(0,0,0,0.08);
+  color: hsl(90, 80%, 20%);
+}
+
+.button-start:hover {
+  border-color: hsl(90, 40%, 50%);
+  background: linear-gradient(hsl(90, 70%, 68%), hsl(90, 70%, 58%));
+  color: hsl(90, 80%, 20%);
+}
+
+.button-cancel:hover {
+  background: linear-gradient(hsl(0, 95%, 68%), hsl(0, 95%, 58%));
+  border-color: hsl(0, 90%, 30%);
+}
+
+.button-start:hover:active {
+  background: linear-gradient(hsl(90, 70%, 50%), hsl(90, 70%, 45%));
+}
+
+.button-cancel:hover:active {
+  background: linear-gradient(hsl(0, 90%, 50%), hsl(0, 90%, 45%));
+}
+
+#button-capture {
+  margin-top: 1px;
+  width: 100%;
+  height: auto;
+  text-align: left;
+  padding: 10px 4px;
+  padding-left: 32px;
+  border: 1px solid transparent;
+  background: transparent;
+  display: block;
+  position: relative;
+}
+
+:root.status-stopped #button-capture {
+  color: GrayText;
+}
+
+:root.status-running #button-capture:hover {
+  background: #EEE;
+  border-color: #DDD;
+}
+
+:root.status-running #button-capture:hover:active {
+  background: #DDD;
+  border-color: #CCC;
+}
+
+#capture-label {
+  display: flex;
+  flex-flow: row nowrap;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+#capture-label::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: url(img/capture-profile-icon.svg);
+  top: 11px;
+  left: 12px;
+}
+
+:root.status-stopped #capture-label::before {
+  opacity: 0.5;
+}
+
+.keyboard-hint {
+  font-size: 1rem;
+  font-weight: normal;
+  flex: 1;
+  text-align: center;
+}
+
+kbd {
+  background-color: #F6F6F6;
+  border: 1px solid #CCC;
+  border-radius: 0.2em;
+  display: inline-block;
+  padding: 0.1em 0.35em;
+  box-shadow: 0 0.1em 0 #BBB;
+  margin: 0 0.15em;
+  font-family: inherit;
+}
+
+#help-capture {
+  margin: 0;
+}
+
+</style>
+
+<body>
+
+<p class="status-display status-display-running">
+  The profiler is recording.
+  <input type="button" class="status-display-button button-cancel" value="Discard &amp; Stop">
+</p>
+
+<p class="status-display status-display-stopped">
+  The profiler is stopped.
+  <input type="button" class="status-display-button button-start" value="Start">
+</p>
+
+<button id="button-capture">
+  <strong id="capture-label">Capture Profile <span class="keyboard-hint"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>6</kbd></strong>
+  <p id="help-capture">Capture the current contents of the profile buffer and open the profile in a new tab.</p>
+</button>
