@@ -2,7 +2,7 @@
   "title": "Gecko Profiler",
   "name": "gecko-profiler",
   "version": "0.0.1",
-  "description": "Collect platform profiles from Firefox Desktop and from Firefox for Android.",
+  "description": "Collect platform profiles from Firefox Desktop.",
   "main": "index.js",
   "author": "Markus Stange <mstange@themasta.com>",
   "icon": "icon.png",
@@ -19,7 +19,7 @@
       "title": "Reporter URL",
       "description": "Collected profiles get posted to this URL",
       "type": "string",
-      "value": "http://localhost:4242/"
+      "value": "https://new.cleopatra.io/from-addon/"
     }
   ],
   "devDependencies": {
