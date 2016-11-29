@@ -34,7 +34,7 @@ function getNSSSymbols() {
 let settings = {
   entries: 1000000,
   interval: 0.4,
-  features: ["js", "stackwalk", "threads", "leaf"],
+  features: ["js", "stackwalk", "threads", "leaf", "tasktracer"],
   threads: ["GeckoMain", "Compositor"]
 }
 
