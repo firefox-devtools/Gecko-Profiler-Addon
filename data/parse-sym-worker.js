@@ -66,7 +66,7 @@ function parseSym(text) {
 }
 
 function convertToText(text) {
-  if (text instanceof String) {
+  if (typeof text === 'string') {
     return Promise.resolve(text);
   }
   if (text instanceof Uint8Array) {
