@@ -113,7 +113,8 @@ function makeProfileAvailableToTab(profile, tab) {
     }, error => {
       mm.sendAsyncMessage('Cleopatra:GetSymbolTableReply', {
         status: 'error',
-        pdbName, breakpadId, error
+        pdbName, breakpadId,
+        error: `${error}`,
       });
     })
   });
