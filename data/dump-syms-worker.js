@@ -103,7 +103,7 @@ function adjustedTotalMemory(targetVal) {
 
 onmessage = function (e) {
   if (e.data && e.data.type == "request") {
-    if (e.data.platform != 'mac' && e.data.platform != 'linux') {
+    if (e.data.platform != 'darwin' && e.data.platform != 'linux') {
       postMessage({type: "error", error: "unknown platform"});
       return;
     }
@@ -114,7 +114,7 @@ onmessage = function (e) {
       FS.createDataFile('/', e.data.filename, fileArray, true, true, true);
       fileArray = null;
     });
-    Module.arguments = (e.data.platform == 'mac' && e.data.arch) ? ['-a', e.data.arch] : [];
+    Module.arguments = (e.data.platform == 'darwin' && e.data.arch) ? ['-a', e.data.arch] : [];
     Module.arguments.push('-c');
     Module.arguments.push('/' + e.data.filename);
     var maxMemory = 1.98 * 1024 * 1024 * 1024;
