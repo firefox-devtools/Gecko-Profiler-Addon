@@ -33,8 +33,8 @@ function getNSSSymbols() {
 
 let settings = {
   entries: 1000000,
-  interval: 0.4,
-  features: ["js", "stackwalk", "threads", "leaf", "tasktracer"],
+  interval: 1,
+  features: ["js", "gc", "stackwalk", "threads", "leaf", "tasktracer"],
   threads: ["GeckoMain", "Compositor"]
 }
 
@@ -54,7 +54,7 @@ function toggleProfilerStartStop() {
 }
 
 const panel = Panel({
-  width: 280,
+  width: 330,
   height: 109,
   contentURL: self.data.url('panel.html'),
   contentScriptFile: self.data.url('panel.js'),
