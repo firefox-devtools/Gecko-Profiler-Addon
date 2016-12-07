@@ -10,8 +10,9 @@ Doing so will install the file `gecko_profiler.xpi` from this repository.
 
 ##Usage
 
-The profiler is automatically started on startup. It automatically adds a toolbar button to your main toolbar.
+The profiler is automatically started on startup. It adds a toolbar button to your main toolbar.
 The button's icon is blue if the profiler is running and gray if the profiler is stopped.
+
 Profile data is stored in a circular buffer. As soon as the buffer fills up for the first time, old data is discarded as new data is added.
 That means that you can leave the profiler running, and collect a snapshot of the most recent couple of seconds at any time.
 
