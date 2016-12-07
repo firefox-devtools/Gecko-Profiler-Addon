@@ -9,6 +9,7 @@ const { getBrowserForTab } = require("sdk/tabs/utils");
 const { prefs } = require("sdk/simple-prefs");
 const { ToggleButton } = require('sdk/ui/button/toggle');
 const { Panel } = require("sdk/panel");
+const fxprefs = require("sdk/preferences/service");
 
 // a dummy function, to show how tests work.
 // to see how to test this function, look at test/test-index.js
@@ -32,15 +33,44 @@ function getNSSSymbols() {
 }
 
 let settings = {
-  entries: 1000000,
+  buffersize: 1000000,
   interval: 1,
-  features: ["js", "gc", "stackwalk", "threads", "leaf", "tasktracer"],
-  threads: ["GeckoMain", "Compositor"]
+  features: {
+    js: true,
+    stackwalk: true,
+    tasktracer: false,
+  },
+  threads: "GeckoMain,Compositor",
+};
+
+function readPrefs() {
+  settings.buffersize = fxprefs.get("profiler.entries", 1000000);
+  settings.interval = fxprefs.get("profiler.intervalMs", "1");
+  settings.threads = fxprefs.get("profiler.threadfilter", "GeckoMain,Compositor");
+  settings.features.js = fxprefs.get("profiler.js", true);
+  settings.features.stackwalk = fxprefs.get("profiler.stackwalk", true);
+  settings.features.tasktracer = fxprefs.get("profiler.tasktracer", false);
+}
+
+function setPrefs() {
+  fxprefs.set("profiler.version", 9);
+  fxprefs.set("profiler.entries", settings.buffersize);
+  fxprefs.set("profiler.intervalMs", settings.interval);
+  fxprefs.set("profiler.threadfilter", settings.threads);
+  fxprefs.set("profiler.js", settings.features.js);
+  fxprefs.set("profiler.stackwalk", settings.features.stackwalk);
+  fxprefs.set("profiler.tasktracer", settings.features.tasktracer);
 }
 
 function startProfiler() {
-  profiler.start(settings.entries, settings.interval,
-                 settings.features, settings.threads);
+  const threads = settings.threads.split(",");
+  const enabledFeatures = Object.keys(settings.features).filter(f => settings.features[f]);
+  enabledFeatures.push("leaf");
+  if (threads.length > 0) {
+    enabledFeatures.push("threads");
+  }
+  profiler.start(settings.buffersize, settings.interval,
+                 enabledFeatures, threads);
 }
 
 function toggleProfilerStartStop() {
@@ -55,7 +85,7 @@ function toggleProfilerStartStop() {
 
 const panel = Panel({
   width: 330,
-  height: 109,
+  height: 170 + 2,
   contentURL: self.data.url('panel.html'),
   contentScriptFile: self.data.url('panel.js'),
   onHide: () => {
@@ -71,6 +101,9 @@ const button = ToggleButton({
   icon: self.data.url('img/toolbar_off.png'),
   onChange: (state) => {
     if (state.checked) {
+      readPrefs();
+      panel.port.emit('ProfilerStateUpdated', { settingsOpen: false });
+      panel.resize(panel.width, 170 + 2);
       panel.show({ position: button });
     }
   },
@@ -93,6 +126,23 @@ panel.port.on('ProfilerControlEvent', e => {
       panel.hide();
       collectProfile();
       break;
+    case 'PanelHeightUpdated':
+      panel.resize(panel.width, e.height + 2);
+      break;
+    case 'ChangeSetting': {
+      const changedSettings = Object.assign({}, e);
+      delete changedSettings.type;
+      Object.assign(settings, changedSettings);
+      setPrefs();
+      break;
+    }
+    case 'ChangeFeature': {
+      const changedFeatures = Object.assign({}, e);
+      delete changedFeatures.type;
+      Object.assign(settings.features, changedFeatures);
+      setPrefs();
+      break;
+    }
     default:
   }
 });
@@ -151,6 +201,8 @@ let collectHotKey = Hotkey({
 });
 
 function main(options, callbacks) {
+  readPrefs();
+  setPrefs();
   startProfiler();
 }
 

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html class="status-running">
 <meta charset="utf-8">
-<title>Gecko profiler panel</title>
 <style>
 
 html {
@@ -10,6 +9,10 @@ html {
   -moz-user-select: none;
   cursor: default;
   overflow: hidden;
+}
+
+* {
+  flex-shrink: 0;
 }
 
 body {
@@ -55,7 +58,7 @@ body {
   position: absolute;
   top: 7px;
   right: 7px;
-  padding: 1.5px;
+  padding: 2.5px;
   border: 0.5px solid transparent;
   border-radius: 2px;
 }
@@ -101,14 +104,15 @@ body {
 }
 
 #button-capture {
-  margin-top: 1px;
-  width: 100%;
+  margin: 6px 5px 5px;
   height: auto;
   text-align: left;
-  padding: 10px 4px;
+  padding: 5px 2px;
   padding-left: 32px;
-  border: 1px solid transparent;
-  background: transparent;
+  border: 1px solid #DDD;
+  box-shadow: 0 1px rgba(0,0,0,0.3);
+  border-radius: 5px;
+  background: linear-gradient(#FAFAFA, #EEE);
   display: block;
   position: relative;
 }
@@ -118,13 +122,12 @@ body {
 }
 
 :root.status-running #button-capture:hover {
-  background: #EEE;
-  border-color: #DDD;
+  background: linear-gradient(#EEE, #DDD);
 }
 
 :root.status-running #button-capture:hover:active {
-  background: #DDD;
-  border-color: #CCC;
+  background: #CCC;
+  border-color: #BBB;
 }
 
 #capture-label {
@@ -140,8 +143,8 @@ body {
   width: 16px;
   height: 16px;
   background: url(img/capture-profile-icon.svg);
-  top: 11px;
-  left: 12px;
+  top: 6px;
+  left: 10px;
 }
 
 :root.status-stopped #capture-label::before {
@@ -157,7 +160,7 @@ body {
 
 kbd {
   font-size: 10px;
-  background-color: #F6F6F6;
+  background-color: hsla(0,0%,100%,0.4);
   border: 1px solid #CCC;
   border-radius: 0.2em;
   display: inline-block;
@@ -169,6 +172,160 @@ kbd {
 
 #help-capture {
   margin: 0;
+}
+
+.info-density {
+  margin: 4px 12px;
+  display: grid;
+  grid-template-columns: 7em auto;
+  grid-template-rows: auto;
+}
+
+.info-density > dt {
+  grid-column: 1;
+  padding: 2px 0;
+}
+
+.info-density > dd {
+  grid-column: 2;
+  margin: 0;
+  padding: 5px 0 3px;
+}
+
+.settings {
+  background: #F7F7F7;
+}
+
+.settings:not(.open) > .settings-list,
+.settings:not(.open) > .settings-apply-button-wrapper {
+  display: none;
+}
+
+#settings-label {
+  margin: 0;
+  padding: 4px 10px;
+  font-size: 14px;
+  font-weight: bold;
+  background: #EEE;
+}
+
+#settings-label:hover {
+  background: #DDD;
+}
+
+#settings-label:hover:active {
+  background: #CCC;
+}
+
+#settings-label::before {
+  content: '';
+  display: inline-block;
+  border-left: 9px solid #BBB;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  margin-right: 5px;
+}
+
+.settings.open > #settings-label::before {
+  transform: rotate(90deg);
+}
+
+.discrete-level {
+  display: flex;
+  height: 100%;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.discrete-level-notch {
+  flex: 1;
+  margin-right: 1px;
+  border: 1px solid rgba(0,0,0,0.2);
+  border-radius: 2px;
+}
+
+.discrete-level-notch.normal.active {
+  border-color: hsl(90, 90%, 40%);
+  background-color: hsla(90, 90%, 40%, 0.5);
+}
+
+.discrete-level-notch.warning.active {
+  border-color: hsl(45, 100%, 49%);
+  background-color: hsla(45, 100%, 49%, 0.5);
+}
+
+.discrete-level-notch.critical.active {
+  border-color: hsl(0, 90%, 40%);
+  background-color: hsla(0, 90%, 40%, 0.5);
+}
+
+.relevancy-level {
+  height: 100%;
+  margin-right: 1px;
+  background: repeating-linear-gradient(to right, #DDD, #DDD 2px, transparent 0, transparent 3px) top left no-repeat;
+  background-size: 400px 20px;
+}
+
+.relevancy-level-fill {
+  height: 100%;
+  width: 40%;
+  background: repeating-linear-gradient(to right, #333, #333 2px, transparent 0, transparent 3px) top left no-repeat;
+  background-size: 400px 20px;
+}
+
+.settings-list {
+  margin: 0;
+  padding: 0;
+  line-height: 22px;
+}
+
+.settings-list > li {
+  margin: 0;
+  padding: 0 10px;
+  display: grid;
+  grid-template-columns: 7em auto;
+  grid-template-rows: auto;
+}
+
+.settings-setting-label {
+  margin: 0;
+  font-size: 100%;
+  font-weight: normal;
+}
+
+.range-with-value {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.range-input {
+  margin: 0;
+  flex: 1;
+}
+
+.range-value {
+  margin-left: 10px;
+  width: 4em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.features-list {
+  margin: 0;
+  padding: 2px 0 0;
+  line-height: 20px;
+}
+
+.features-list > li {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.settings-apply-button-wrapper {
+  padding: 10px;
+  margin: 0;
+  text-align: right;
 }
 
 </style>
@@ -186,6 +343,80 @@ kbd {
 </p>
 
 <button id="button-capture">
-  <strong id="capture-label">Capture Profile <span class="keyboard-hint"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>6</kbd></strong>
+  <strong id="capture-label">Capture Profile <span class="keyboard-hint"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>6</kbd></span></strong>
   <p id="help-capture">Capture the current contents of the profile buffer and open the profile in a new tab.</p>
 </button>
+
+<dl class="info-density">
+  <dt>Overhead:</dt>
+  <dd>
+    <div class="discrete-level">
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch normal active"></span>
+      <span class="discrete-level-notch warning active"></span>
+      <span class="discrete-level-notch warning active"></span>
+      <span class="discrete-level-notch warning active"></span>
+      <span class="discrete-level-notch warning active"></span>
+      <span class="discrete-level-notch warning inactive"></span>
+      <span class="discrete-level-notch warning inactive"></span>
+      <span class="discrete-level-notch warning inactive"></span>
+      <span class="discrete-level-notch critical inactive"></span>
+      <span class="discrete-level-notch critical inactive"></span>
+      <span class="discrete-level-notch critical inactive"></span>
+      <span class="discrete-level-notch critical inactive"></span>
+      <span class="discrete-level-notch critical inactive"></span>
+      <span class="discrete-level-notch critical inactive"></span>
+    </div>
+  </dd>
+  <dt>Information:</dt>
+  <dd>
+    <div class="relevancy-level">
+      <div class="relevancy-level-fill"></div>
+    </div>
+  </dd>
+</dl>
+
+<div class="settings">
+  <h1 id="settings-label">Settings</h1>
+  <ul class="settings-list">
+    <li>
+      <h1 class="settings-setting-label">Interval:</h1>
+      <span class="range-with-value">
+        <input type="range" class="range-input interval-range" min="0" max="100">
+        <span class="range-value interval-value">1 ms</span>
+      </span>
+    </li>
+    <li>
+      <h1 class="settings-setting-label">Buffer size:</h1>
+      <span class="range-with-value">
+        <input type="range" class="range-input buffersize-range" min="0" max="100">
+        <span class="range-value buffersize-value">9 MB</span>
+      </span>
+    </li>
+    <li>
+      <h1 class="settings-setting-label">Threads:</h1>
+      <input type="text" class="settings-textbox threads-textbox"
+             title="Comma-separated list of case-insensitive substring filters for the thread name"
+             value="GeckoMain,Compositor">
+    </li>
+    <li>
+      <h1 class="settings-setting-label">Features:</h1>
+      <ul class="features-list">
+        <li><label><input type="checkbox" class="stackwalk-checkbox" checked>Stack walk</label></li>
+        <li><label><input type="checkbox" class="js-checkbox" checked>JavaScript</label></li>
+        <li><label><input type="checkbox" class="tasktracer-checkbox">Task tracer</label></li>
+      </ul>
+    </li>
+  </ul>
+  <p class="settings-apply-button-wrapper"><input type="button" class="settings-apply-button" value="Apply (Restart Profiler)"></p>
+</div>

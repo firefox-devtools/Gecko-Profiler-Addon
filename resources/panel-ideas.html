@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html class="status-running">
 <meta charset="utf-8">
 <style>
 
@@ -10,84 +11,123 @@ html {
   overflow: hidden;
 }
 
+* {
+  flex-shrink: 0;
+}
+
 body {
   margin: 0;
 }
 
-.status-running {
+.status-display {
   margin: 0;
-  background: hsl(90, 70%, 70%);
   padding: 10px 4px;
   position: relative;
 }
 
-.status-running::before {
+.status-display::before {
   content: '';
   display: inline-block;
   width: 17px;
   height: 17px;
-  background: hsl(90, 80%, 40%);
-  border-radius: 100%;
   vertical-align: top;
   margin: -2px 3px -20px;
-  /* animation: pulse 800ms alternate infinite ease-in-out; */
 }
 
-@keyframes pulse {
-  from {
-    opacity: 0.5;
-  }
-  to {
-    opacity: 1.0;
-  }
+:root.status-stopped .status-display:not(.status-display-stopped) { display: none; }
+:root.status-running .status-display:not(.status-display-running) { display: none; }
+
+.status-display-stopped {
+  background: hsl(210, 80%, 85%);
 }
 
-#button-cancel {
+.status-display-running {
+  background: hsl(90, 70%, 70%);
+}
+
+.status-display-stopped::before {
+  background: hsl(210, 70%, 60%);
+}
+
+.status-display-running::before {
+  background: hsl(90, 80%, 40%);
+  border-radius: 100%;
+}
+
+.status-display-button {
   position: absolute;
   top: 7px;
   right: 7px;
-  padding: 1.5px;
-  border: 0.5px solid hsl(90, 40%, 50%);
-  background: rgba(0,0,0,0.08);
+  padding: 2.5px;
+  border: 0.5px solid transparent;
   border-radius: 2px;
-  color: hsl(90, 80%, 20%);
 }
 
-#button-cancel:hover {
-  background: linear-gradient(hsl(0, 95%, 68%), hsl(0, 95%, 58%));
-  border-color: hsl(0, 90%, 30%);
+.status-display-button:hover {
   box-shadow: inset 0 0.5px hsla(0,0%,100%,0.3);
   color: black;
 }
 
-#button-cancel:hover:active {
-  background: linear-gradient(hsl(0, 90%, 50%), hsl(0, 90%, 45%));
-  border-color: hsl(0, 90%, 30%);
+.status-display-button:hover:active {
   box-shadow: inset 0 2px 5px rgba(0,0,0,0.15);
-  color: black;
+}
+
+.button-start {
+  border-color: hsl(210, 30%, 60%);
+  background: rgba(0,0,0,0.08);
+  color: hsl(210, 80%, 20%);
+}
+
+.button-cancel {
+  border-color: hsl(90, 40%, 50%);
+  background: rgba(0,0,0,0.08);
+  color: hsl(90, 80%, 20%);
+}
+
+.button-start:hover {
+  border-color: hsl(90, 40%, 50%);
+  background: linear-gradient(hsl(90, 70%, 68%), hsl(90, 70%, 58%));
+  color: hsl(90, 80%, 20%);
+}
+
+.button-cancel:hover {
+  background: linear-gradient(hsl(0, 95%, 68%), hsl(0, 95%, 58%));
+  border-color: hsl(0, 90%, 30%);
+}
+
+.button-start:hover:active {
+  background: linear-gradient(hsl(90, 70%, 50%), hsl(90, 70%, 45%));
+}
+
+.button-cancel:hover:active {
+  background: linear-gradient(hsl(0, 90%, 50%), hsl(0, 90%, 45%));
 }
 
 #button-capture {
-  margin-top: 1px;
-  width: 100%;
+  margin: 6px 5px 5px;
   height: auto;
   text-align: left;
-  padding: 10px 4px;
+  padding: 5px 2px;
   padding-left: 32px;
-  border: 1px solid transparent;
-  background: transparent;
+  border: 1px solid #DDD;
+  box-shadow: 0 1px rgba(0,0,0,0.3);
+  border-radius: 5px;
+  background: linear-gradient(#FAFAFA, #EEE);
   display: block;
   position: relative;
 }
 
-#button-capture:hover {
-  background: #EEE;
-  border-color: #DDD;
+:root.status-stopped #button-capture {
+  color: GrayText;
 }
 
-#button-capture:hover:active {
-  background: #DDD;
-  border-color: #CCC;
+:root.status-running #button-capture:hover {
+  background: linear-gradient(#EEE, #DDD);
+}
+
+:root.status-running #button-capture:hover:active {
+  background: #CCC;
+  border-color: #BBB;
 }
 
 #capture-label {
@@ -98,11 +138,17 @@ body {
 }
 
 #capture-label::before {
-  content: '📷';
+  content: '';
   position: absolute;
-  top: 8px;
+  width: 16px;
+  height: 16px;
+  background: url(img/capture-profile-icon.svg);
+  top: 11px;
   left: 8px;
-  font-size: 20px;
+}
+
+:root.status-stopped #capture-label::before {
+  opacity: 0.5;
 }
 
 .keyboard-hint {
@@ -113,7 +159,8 @@ body {
 }
 
 kbd {
-  background-color: #F6F6F6;
+  font-size: 10px;
+  background-color: hsla(0,0%,100%,0.4);
   border: 1px solid #CCC;
   border-radius: 0.2em;
   display: inline-block;
@@ -121,10 +168,6 @@ kbd {
   box-shadow: 0 0.1em 0 #BBB;
   margin: 0 0.15em;
   font-family: inherit;
-}
-
-#button-capture:hover:active > #capture-label::before {
-  content: '📸';
 }
 
 #help-capture {
@@ -149,11 +192,42 @@ kbd {
   padding: 5px 0 3px;
 }
 
-h1 {
+.settings {
+  background: #F7F7F7;
+}
+
+.settings:not(.open) > .settings-list,
+.settings:not(.open) > .settings-apply-button-wrapper {
+  display: none;
+}
+
+#settings-label {
   margin: 0;
-  font-size: 100%;
-  font-weight: normal;
-  padding: 1px 10px;
+  padding: 4px 10px;
+  font-size: 14px;
+  font-weight: bold;
+  background: #EEE;
+}
+
+#settings-label:hover {
+  background: #DDD;
+}
+
+#settings-label:hover:active {
+  background: #CCC;
+}
+
+#settings-label::before {
+  content: '';
+  display: inline-block;
+  border-left: 9px solid #BBB;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  margin-right: 5px;
+}
+
+.settings.open > #settings-label::before {
+  transform: rotate(90deg);
 }
 
 .discrete-level {
@@ -199,21 +273,79 @@ h1 {
   background-size: 400px 20px;
 }
 
+.settings-list {
+  margin: 0;
+  padding: 0;
+  line-height: 22px;
+}
+
+.settings-list > li {
+  margin: 0;
+  padding: 0 10px;
+  display: grid;
+  grid-template-columns: 7em auto;
+  grid-template-rows: auto;
+}
+
+.settings-setting-label {
+  margin: 0;
+  font-size: 100%;
+  font-weight: normal;
+}
+
+.range-with-value {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.range-input {
+  margin: 0;
+  flex: 1;
+}
+
+.range-value {
+  margin-left: 10px;
+  width: 3em;
+  flex-shrink: 0;
+}
+
+.features-list {
+  margin: 0;
+  padding: 2px 0 0;
+  line-height: 20px;
+}
+
+.features-list > li {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.settings-apply-button-wrapper {
+  padding: 4px 10px;
+  margin: 0;
+  text-align: right;
+}
+
 </style>
 
 <body>
 
-<p class="status-running">
+<p class="status-display status-display-running">
   The profiler is recording.
-  <input type="button" id="button-cancel" value="Discard &amp; Stop">
+  <input type="button" class="status-display-button button-cancel" value="Discard &amp; Stop">
 </p>
 
-<!--<input type="button" value="Start Profiler">-->
+<p class="status-display status-display-stopped">
+  The profiler is stopped.
+  <input type="button" class="status-display-button button-start" value="Start">
+</p>
+
 <button id="button-capture">
-  <strong id="capture-label">Capture Profile <span class="keyboard-hint"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>6</kbd></strong>
+  <strong id="capture-label">Capture Profile <span class="keyboard-hint"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>6</kbd></span></strong>
   <p id="help-capture">Capture the current contents of the profile buffer and open the profile in a new tab.</p>
 </button>
-<!--
+
 <dl class="info-density">
   <dt>Overhead:</dt>
   <dd>
@@ -254,5 +386,34 @@ h1 {
 </dl>
 
 <div class="settings">
-  <strong id="settings-label">Settings</strong>
-</div>-->
+  <h1 id="settings-label">Settings</h1>
+  <ul class="settings-list">
+    <li>
+      <h1 class="settings-setting-label">Interval:</h1>
+      <span class="range-with-value">
+        <input type="range" class="range-input">
+        <span class="range-value">1 ms</span>
+      </span>
+    </li>
+    <li>
+      <h1 class="settings-setting-label">Buffer size:</h1>
+      <span class="range-with-value">
+        <input type="range" class="range-input">
+        <span class="range-value">9 MB</span>
+      </span>
+    </li>
+    <li>
+      <h1 class="settings-setting-label">Threads:</h1>
+      <input type="text" class="settings-textbox" title="Comma-separated list of case-insensitive substring filters for the thread name" value="GeckoMain,Compositor">
+    </li>
+    <li>
+      <h1 class="settings-setting-label">Features:</h1>
+      <ul class="features-list">
+        <li><label><input type="checkbox" checked>Stack walk</label></li>
+        <li><label><input type="checkbox" checked>JavaScript</label></li>
+        <li><label><input type="checkbox">Task tracer</label></li>
+      </ul>
+    </li>
+  </ul>
+  <p class="settings-apply-button-wrapper"><input type="button" class="settings-apply-button" value="Apply (Restart Profiler)"></p>
+</div>
