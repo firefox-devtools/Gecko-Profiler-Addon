@@ -1,0 +1,13 @@
+.git/
+.gitignore
+.DS_Store
+.jpmignore
+gecko_profiler.update.rdf
+test/
+resources/
+.travis.yml
+README.md
+sdk/
+*.xpi
+node_modules/
+npm-debug.log
