@@ -191,12 +191,12 @@ function collectProfile() {
 }
 
 let startStopHotKey = Hotkey({
-  combo: "control-shift-5",
+  combo: "control-shift-1",
   onPress: toggleProfilerStartStop
 });
 
 let collectHotKey = Hotkey({
-  combo: "control-shift-6",
+  combo: "control-shift-2",
   onPress: collectProfile
 });
 
