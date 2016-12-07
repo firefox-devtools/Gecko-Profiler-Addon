@@ -85,7 +85,7 @@ function toggleProfilerStartStop() {
 
 const panel = Panel({
   width: 330,
-  height: 170 + 2,
+  height: 168 + 2,
   contentURL: self.data.url('panel.html'),
   contentScriptFile: self.data.url('panel.js'),
   onHide: () => {
@@ -103,7 +103,7 @@ const button = ToggleButton({
     if (state.checked) {
       readPrefs();
       panel.port.emit('ProfilerStateUpdated', { settingsOpen: false });
-      panel.resize(panel.width, 170 + 2);
+      panel.resize(panel.width, 168 + 2);
       panel.show({ position: button });
     }
   },
