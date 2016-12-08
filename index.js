@@ -45,7 +45,7 @@ let settings = {
 
 function readPrefs() {
   settings.buffersize = fxprefs.get("profiler.entries", 1000000);
-  settings.interval = fxprefs.get("profiler.intervalMs", "1");
+  settings.interval = +fxprefs.get("profiler.intervalMs", "1");
   settings.threads = fxprefs.get("profiler.threadfilter", "GeckoMain,Compositor");
   settings.features.js = fxprefs.get("profiler.js", true);
   settings.features.stackwalk = fxprefs.get("profiler.stackwalk", true);
@@ -55,7 +55,7 @@ function readPrefs() {
 function setPrefs() {
   fxprefs.set("profiler.version", 9);
   fxprefs.set("profiler.entries", settings.buffersize);
-  fxprefs.set("profiler.intervalMs", settings.interval);
+  fxprefs.set("profiler.intervalMs", `${settings.interval}`);
   fxprefs.set("profiler.threadfilter", settings.threads);
   fxprefs.set("profiler.js", settings.features.js);
   fxprefs.set("profiler.stackwalk", settings.features.stackwalk);
