@@ -171,6 +171,10 @@ function makeProfileAvailableToTab(profile, tab) {
 }
 
 function collectProfile() {
+  // Pause profiler before we collect the profile, so that
+  // we can reduce the noise caused by Cleopatra.
+  profiler.pause();
+
   var profilePromise = profiler.getProfile();
   var tabOpenPromise = new Promise((resolve, reject) => {
     tabs.open({
@@ -187,6 +191,11 @@ function collectProfile() {
     console.log("error getting profile:");
     console.log(error)
     tabOpenPromise.then(tab => tab.url = `data:text/html,${error}`);
+  }).then(function () {
+    // Resume the profiler after profiler page is opened.
+    if (profiler.isRunning()) {
+      profiler.resume();
+    }
   });
 }
 
