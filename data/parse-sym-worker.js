@@ -35,7 +35,7 @@ function parseSym(text) {
   let nextPublic = text.indexOf('\nPUBLIC ');
   let nextFunc = text.indexOf('\nFUNC ');
   while (nextPublic != -1 || nextFunc != -1) {
-    if (nextFunc == -1 || nextPublic < nextFunc) {
+    if (nextPublic != -1 && (nextFunc == -1 || nextPublic < nextFunc)) {
       // Parse PUBLIC line: PUBLIC <address> <stack_param_size> <name>
       const addrStart = nextPublic + '\nPUBLIC '.length;
       const addrEnd = text.indexOf(' ', addrStart);
