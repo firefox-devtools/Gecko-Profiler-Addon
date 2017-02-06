@@ -2,7 +2,7 @@
   "title": "Gecko Profiler",
   "name": "geckoprofiler",
   "id": "jid0-edalmuivkozlouyij0lpdx548bc@jetpack",
-  "version": "2.0.18",
+  "version": "2.0.29",
   "description": "Collect platform profiles from Firefox Desktop.",
   "main": "index.js",
   "author": "Markus Stange <mstange@themasta.com>",
@@ -26,8 +26,8 @@
       "value": "https://new.cleopatra.io/from-addon/"
     }
   ],
-  "updateURL": "https://raw.githubusercontent.com/mstange/Gecko-Profiler-Addon/master/gecko_profiler.update.rdf",
-  "updateLink": "https://raw.githubusercontent.com/mstange/Gecko-Profiler-Addon/master/gecko_profiler.xpi",
+  "updateURL": "https://raw.githubusercontent.com/devtools-html/Gecko-Profiler-Addon/master/gecko_profiler.update.rdf",
+  "updateLink": "https://raw.githubusercontent.com/devtools-html/Gecko-Profiler-Addon/master/gecko_profiler.xpi",
   "devDependencies": {
     "jpm": "^1.2.2"
   },
