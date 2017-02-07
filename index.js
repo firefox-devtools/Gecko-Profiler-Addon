@@ -63,6 +63,7 @@ function setPrefs() {
 }
 
 function startProfiler() {
+  readPrefs();
   const threads = settings.threads.split(",");
   const enabledFeatures = Object.keys(settings.features).filter(f => settings.features[f]);
   enabledFeatures.push("leaf");
@@ -102,6 +103,7 @@ const button = ToggleButton({
   onChange: (state) => {
     if (state.checked) {
       readPrefs();
+      panel.port.emit('ProfilerStateUpdated', settings);
       panel.port.emit('ProfilerStateUpdated', { settingsOpen: false });
       panel.resize(panel.width, 168 + 2);
       panel.show({ position: button });
