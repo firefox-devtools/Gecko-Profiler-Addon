@@ -31,6 +31,9 @@ function renderState(state) {
   }
   const information = calculateInformation(state);
   document.querySelector('.relevancy-level-fill').style.width = `${information * 100}%`;
+
+  const height = document.body.getBoundingClientRect().height;
+  self.port.emit('ProfilerControlEvent', { type: 'PanelHeightUpdated', height });
 }
 
 function renderControls(state) {
@@ -97,8 +100,6 @@ document.querySelector('#button-capture').addEventListener('click', () => {
 document.querySelector('#settings-label').addEventListener('click', () => {
   gState = Object.assign({}, gState, { settingsOpen: !gState.settingsOpen });
   renderState(gState);
-  const height = document.body.getBoundingClientRect().height;
-  self.port.emit('ProfilerControlEvent', { type: 'PanelHeightUpdated', height });
 });
 
 document.querySelector('.interval-range').addEventListener('input', e => {
