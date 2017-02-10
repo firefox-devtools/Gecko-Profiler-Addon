@@ -152,18 +152,18 @@ panel.port.on('ProfilerControlEvent', e => {
 function makeProfileAvailableToTab(profile, tab) {
   const browser = getBrowserForTab(viewFor(tab));
   const mm = browser.messageManager;
-  mm.loadFrameScript(self.data.url('cleopatra-tab-framescript.js'), true);
-  mm.sendAsyncMessage("Cleopatra:Init", profile);
-  mm.addMessageListener('Cleopatra:GetSymbolTable', e => {
+  mm.loadFrameScript(self.data.url('tab-framescript.js'), true);
+  mm.sendAsyncMessage("GeckoProfilerAddon:Init", profile);
+  mm.addMessageListener('GeckoProfilerAddon:GetSymbolTable', e => {
     const { pdbName, breakpadId } = e.data;
     symbolStore.getSymbols(pdbName, breakpadId).then(result => {
       const [addr, index, buffer] = result;
-      mm.sendAsyncMessage('Cleopatra:GetSymbolTableReply', {
+      mm.sendAsyncMessage('GeckoProfilerAddon:GetSymbolTableReply', {
         status: 'success',
         pdbName, breakpadId, result: [addr, index, buffer]
       });
     }, error => {
-      mm.sendAsyncMessage('Cleopatra:GetSymbolTableReply', {
+      mm.sendAsyncMessage('GeckoProfilerAddon:GetSymbolTableReply', {
         status: 'error',
         pdbName, breakpadId,
         error: `${error}`,
@@ -173,8 +173,8 @@ function makeProfileAvailableToTab(profile, tab) {
 }
 
 function collectProfile() {
-  // Pause profiler before we collect the profile, so that
-  // we can reduce the noise caused by Cleopatra.
+  // Pause profiler before we collect the profile, so that we don't capture
+  // more samples while the parent process waits for subprocess profiles.
   profiler.pause();
 
   var profilePromise = profiler.getProfile();

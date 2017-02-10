@@ -1,6 +1,6 @@
 let gProfile = null;
 
-addMessageListener("Cleopatra:Init", e => {
+addMessageListener("GeckoProfilerAddon:Init", e => {
   gProfile = e.data;
   connectToPage();
   addEventListener("DOMContentLoaded", connectToPage);
@@ -18,8 +18,8 @@ function connectToPage() {
 
 function getSymbolTable(pdbName, breakpadId) {
   return new Promise((resolve, reject) => {
-    sendAsyncMessage('Cleopatra:GetSymbolTable', { pdbName, breakpadId });
-    addMessageListener('Cleopatra:GetSymbolTableReply', e => {
+    sendAsyncMessage('GeckoProfilerAddon:GetSymbolTable', { pdbName, breakpadId });
+    addMessageListener('GeckoProfilerAddon:GetSymbolTableReply', e => {
       const data = e.data;
       if (data.pdbName === pdbName && data.breakpadId === breakpadId) {
         if (data.status === 'success') {
