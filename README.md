@@ -1,10 +1,10 @@
 #Gecko Profiler
 
-This add-on lets you collect profiles from Firefox, and open those profiles in [cleopatra](https://new.cleopatra.io/).
+This add-on lets you collect profiles from Firefox, and open those profiles in [perf-html](https://perf-html.io/).
 
 ##Installation
 
-The easiest way to install it is to go to [https://new.cleopatra.io/](https://new.cleopatra.io/) and click the link on there.
+The easiest way to install it is to go to [https://perf-html.io/](https://perf-html.io/) and click the link on there.
 
 Doing so will install the file `gecko_profiler.xpi` from this repository.
 
@@ -19,9 +19,9 @@ That means that you can leave the profiler running, and collect a snapshot of th
 You can control the profiler with two keyboard shortcuts:
 
  - <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>1</kbd>: Stop / Restart profiling
- - <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>2</kbd>: Capture the profile. This captures the current contents of the profiler buffer, opens a tab with cleopatra at `https://new.cleopatra.io/`, and sends the profile to it.
+ - <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>2</kbd>: Capture the profile. This captures the current contents of the profiler buffer, opens a tab with perf-html at `https://perf-html.io/`, and sends the profile to it.
 
-If you want to run your own cleopatra instance or want profiles to be sent to a different site that you're developing, you can change the “Reporter URL” preference of this add-on on `about:addons`.
+If you want to run your own perf-html instance or want profiles to be sent to a different site that you're developing, you can change the “Reporter URL” preference of this add-on on `about:addons`.
 
 ##Development
 

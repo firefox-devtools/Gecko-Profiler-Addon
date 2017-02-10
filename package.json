@@ -23,7 +23,7 @@
       "title": "Reporter URL",
       "description": "Collected profiles get posted to this URL",
       "type": "string",
-      "value": "https://new.cleopatra.io/from-addon/"
+      "value": "https://perf-html.io/from-addon/"
     }
   ],
   "updateURL": "https://raw.githubusercontent.com/devtools-html/Gecko-Profiler-Addon/master/gecko_profiler.update.rdf",
