@@ -2,7 +2,7 @@
   "title": "Gecko Profiler",
   "name": "geckoprofiler",
   "id": "jid0-edalmuivkozlouyij0lpdx548bc@jetpack",
-  "version": "2.0.30",
+  "version": "2.0.31",
   "description": "Collect platform profiles from Firefox Desktop.",
   "main": "index.js",
   "author": "Markus Stange <mstange@themasta.com>",
