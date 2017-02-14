@@ -21,6 +21,17 @@ function convertStringArrayToUint8BufferWithIndex(array, approximateLength) {
   return { index, buffer };
 }
 
+function convertSymsMapToExpectedSymFormat(syms, approximateSymLength) {
+  const addresses = Array.from(syms.keys());
+  addresses.sort((a, b) => a - b);
+
+  const symsArray = addresses.map(addr => syms.get(addr));
+  const { index, buffer } =
+    convertStringArrayToUint8BufferWithIndex(symsArray, approximateSymLength);
+
+  return [new Uint32Array(addresses), index, buffer];
+}
+
 function parseSym(text) {
   const syms = new Map();
 
@@ -56,13 +67,7 @@ function parseSym(text) {
     }
   }
 
-  const addresses = Array.from(syms.keys());
-  addresses.sort((a, b) => a - b);
-
-  const symsArray = addresses.map(addr => syms.get(addr));
-  const { index: symindex, buffer: symbuffer } = convertStringArrayToUint8BufferWithIndex(symsArray, approximateSymLength);
-
-  return [new Uint32Array(addresses), symindex, symbuffer];
+  return convertSymsMapToExpectedSymFormat(syms, approximateSymLength);
 }
 
 function convertToText(text) {
