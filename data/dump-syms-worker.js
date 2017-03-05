@@ -56,6 +56,10 @@ var Module = {
   }],
   postRun: [
     function() {
+      if (EXITSTATUS !== 0) {
+        postMessage({type: "error", error: `dump_syms was unable to parse the supplied binary; exit code ${EXITSTATUS}`});
+        return;
+      }
       var output = stdoutStream.getOutput();
       postMessage({type: "success", result: output}, [output.buffer]);
     }
