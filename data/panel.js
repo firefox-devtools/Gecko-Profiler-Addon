@@ -42,6 +42,7 @@ function renderControls(state) {
   document.querySelector('.stackwalk-checkbox').value = state.stackwalk;
   document.querySelector('.js-checkbox').value = state.js;
   document.querySelector('.tasktracer-checkbox').value = state.tasktracer;
+  document.querySelector('.threads-textbox').value = state.threads;
 }
 
 function clamp(val, min, max) {
