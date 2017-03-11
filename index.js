@@ -27,7 +27,7 @@ function getNSSSymbols() {
     return Promise.all(loadedNSSLibs.map(lib => {
       return symbolStore.getSymbols(lib.debugName, lib.breakpadId, lib.name,
                                     profiler.platform.platform,
-                                    profiler.platform.arch);
+                                    lib.arch);
     }));
   });
 }
