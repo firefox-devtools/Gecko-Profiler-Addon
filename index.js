@@ -22,10 +22,10 @@ function dummy(text, callback) {
 function getNSSSymbols() {
   return profiler.getSharedLibraryInformation().then(libs => {
     let loadedNSSLibs = libs.filter(lib => {
-      return lib.pdbName.toLowerCase().startsWith("libnss3");
+      return lib.debugName.toLowerCase().startsWith("libnss3");
     });
     return Promise.all(loadedNSSLibs.map(lib => {
-      return symbolStore.getSymbols(lib.pdbName, lib.breakpadId, lib.name,
+      return symbolStore.getSymbols(lib.debugName, lib.breakpadId, lib.name,
                                     profiler.platform.platform,
                                     profiler.platform.arch);
     }));
@@ -155,17 +155,17 @@ function makeProfileAvailableToTab(profile, tab) {
   mm.loadFrameScript(self.data.url('tab-framescript.js'), true);
   mm.sendAsyncMessage("GeckoProfilerAddon:Init", profile);
   mm.addMessageListener('GeckoProfilerAddon:GetSymbolTable', e => {
-    const { pdbName, breakpadId } = e.data;
-    symbolStore.getSymbols(pdbName, breakpadId).then(result => {
+    const { debugName, breakpadId } = e.data;
+    symbolStore.getSymbols(debugName, breakpadId).then(result => {
       const [addr, index, buffer] = result;
       mm.sendAsyncMessage('GeckoProfilerAddon:GetSymbolTableReply', {
         status: 'success',
-        pdbName, breakpadId, result: [addr, index, buffer]
+        debugName, breakpadId, result: [addr, index, buffer]
       });
     }, error => {
       mm.sendAsyncMessage('GeckoProfilerAddon:GetSymbolTableReply', {
         status: 'error',
-        pdbName, breakpadId,
+        debugName, breakpadId,
         error: `${error}`,
       });
     })

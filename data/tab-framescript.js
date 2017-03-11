@@ -11,17 +11,17 @@ function connectToPage() {
   if (unsafeWindow.connectToGeckoProfiler) {
     unsafeWindow.connectToGeckoProfiler(makeAccessibleToPage({
       getProfile: () => Promise.resolve(gProfile),
-      getSymbolTable: (pdbName, breakpadId) => getSymbolTable(pdbName, breakpadId),
+      getSymbolTable: (debugName, breakpadId) => getSymbolTable(debugName, breakpadId),
     }, unsafeWindow));
   }
 }
 
-function getSymbolTable(pdbName, breakpadId) {
+function getSymbolTable(debugName, breakpadId) {
   return new Promise((resolve, reject) => {
-    sendAsyncMessage('GeckoProfilerAddon:GetSymbolTable', { pdbName, breakpadId });
+    sendAsyncMessage('GeckoProfilerAddon:GetSymbolTable', { debugName, breakpadId });
     addMessageListener('GeckoProfilerAddon:GetSymbolTableReply', e => {
       const data = e.data;
-      if (data.pdbName === pdbName && data.breakpadId === breakpadId) {
+      if (data.debugName === debugName && data.breakpadId === breakpadId) {
         if (data.status === 'success') {
           resolve(data.result);
         } else {
