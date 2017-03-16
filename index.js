@@ -214,7 +214,16 @@ let collectHotKey = Hotkey({
 function main(options, callbacks) {
   readPrefs();
   setPrefs();
-  startProfiler();
+
+  // Start the profiler, unless it's already running (for example due to
+  // startup profiling environment variables). In that case, starting the
+  // profiler again would throw away the data that is currently in the
+  // profiler buffer.
+  profiler.isRunning().then(running => {
+    if (!running) {
+      startProfiler();
+    }
+  });
 }
 
 exports.getNSSSymbols = getNSSSymbols;
