@@ -1,14 +1,14 @@
-#Gecko Profiler
+# Gecko Profiler
 
 This add-on lets you collect profiles from Firefox, and open those profiles in [perf-html](https://perf-html.io/).
 
-##Installation
+## Installation
 
 The easiest way to install it is to go to [https://perf-html.io/](https://perf-html.io/) and click the link on there.
 
 Doing so will install the file `gecko_profiler.xpi` from this repository.
 
-##Usage
+## Usage
 
 The profiler is automatically started on startup. It adds a toolbar button to your main toolbar.
 The button's icon is blue if the profiler is running and gray if the profiler is stopped.
@@ -23,7 +23,7 @@ You can control the profiler with two keyboard shortcuts:
 
 If you want to run your own perf-html instance or want profiles to be sent to a different site that you're developing, you can change the “Reporter URL” preference of this add-on on `about:addons`.
 
-##Development
+## Development
 
 Make sure you have somewhat recent versions of node and npm installed. Then:
 
@@ -36,7 +36,7 @@ $ # Or, if you're on a different platform, or want to use a different Firefox bi
 $ npm run -- --binary /path/to/Firefox
 ```
 
-##Known issues
+## Known issues
 
  - Does not support getting profiles from Firefox for Android.
  - Does not allow symbolicating locally-built Firefox binaries on Windows.
