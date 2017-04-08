@@ -33,7 +33,7 @@ $ cd Gecko-Profiler-Addon/
 $ npm install                 # installs jpm
 $ npm run start-mac-nightly   # runs jpm run --binary /Applications/FirefoxNightly.app
 $ # Or, if you're on a different platform, or want to use a different Firefox binary:
-$ npm run -- --binary /path/to/Firefox
+$ npm start -- --binary /path/to/Firefox
 ```
 
 ## Known issues
