@@ -1,14 +1,3 @@
-let gState = {
-  isRunning: true,
-  settingsOpen: false,
-  interval: 1,
-  buffersize: 1000000,
-  stackwalk: true,
-  js: true,
-  tasktracer: false,
-  threads: 'GeckoMain,Compositor',
-};
-
 const intervalScale = makeExponentialScale(0.01, 100);
 const buffersizeScale = makeExponentialScale(10000, 100000000);
 
@@ -33,7 +22,6 @@ function renderState(state) {
   document.querySelector('.relevancy-level-fill').style.width = `${information * 100}%`;
 
   const height = document.body.getBoundingClientRect().height;
-  self.port.emit('ProfilerControlEvent', { type: 'PanelHeightUpdated', height });
 }
 
 function renderControls(state) {
@@ -78,78 +66,80 @@ function calculateInformation(state) {
   return clamp(informationFromSampling + informationFromBuffersize + informationFromStackwalk + informationFromJavaScrpt + informationFromTaskTracer, 0, 1);
 }
 
-self.port.on('ProfilerStateUpdated', state => {
-  gState = Object.assign({}, gState, state);
-  renderState(gState);
-  renderControls(gState);
+function getBackground() {
+  return browser.runtime.getBackgroundPage();
+}
+
+document.querySelector('.button-start').addEventListener('click', async () => {
+  const background = await getBackground();
+  await background.startProfiler();
+  background.adjustState({ isRunning: true });
+  renderState(background.profilerState);
 });
 
-document.querySelector('.button-start').addEventListener('click', () => {
-  self.port.emit('ProfilerControlEvent', { type: 'StartProfiler' });
+document.querySelector('.button-cancel').addEventListener('click', async () => {
+  const background = await getBackground();
+  await background.stopProfiler();
+  background.adjustState({ isRunning: false });
+  renderState(background.profilerState);
 });
 
-document.querySelector('.button-cancel').addEventListener('click', () => {
-  self.port.emit('ProfilerControlEvent', { type: 'StopProfiler' });
-});
-
-document.querySelector('#button-capture').addEventListener('click', () => {
+document.querySelector('#button-capture').addEventListener('click', async () => {
   if (document.documentElement.classList.contains('status-running')) {
-    self.port.emit('ProfilerControlEvent', { type: 'CaptureProfile' });
+    const background = await getBackground();
+    await background.captureProfile();
   }
 });
 
-document.querySelector('#settings-label').addEventListener('click', () => {
-  gState = Object.assign({}, gState, { settingsOpen: !gState.settingsOpen });
-  renderState(gState);
+document.querySelector('#settings-label').addEventListener('click', async () => {
+  const background = await getBackground();
+  background.adjustState({ settingsOpen: !background.profilerState.settingsOpen });
+  renderState(background.profilerState);
 });
 
-document.querySelector('.interval-range').addEventListener('input', e => {
+document.querySelector('.interval-range').addEventListener('input', async e => {
+  const background = await getBackground();
   const frac = e.target.value / 100;
-  gState = Object.assign({}, gState, { interval: intervalScale.fromFractionToSingleDigitValue(frac) });
-  renderState(gState);
+  background.adjustState({ interval: intervalScale.fromFractionToSingleDigitValue(frac) });
+  renderState(background.profilerState);
 });
 
-document.querySelector('.buffersize-range').addEventListener('input', e => {
+document.querySelector('.buffersize-range').addEventListener('input', async e => {
+  const background = await getBackground();
   const frac = e.target.value / 100;
-  gState = Object.assign({}, gState, { buffersize: buffersizeScale.fromFractionToSingleDigitValue(frac) });
-  renderState(gState);
+  background.adjustState({ buffersize: buffersizeScale.fromFractionToSingleDigitValue(frac) });
+  renderState(background.profilerState);
 });
 
-document.querySelector('.interval-range').addEventListener('change', e => {
-  self.port.emit('ProfilerControlEvent', { type: 'ChangeSetting', interval: gState.interval })
+document.querySelector('.stackwalk-checkbox').addEventListener('change', async e => {
+  const background = await getBackground();
+  const features = Object.assign({}, background.profilerState.features, { stackwalk: e.target.checked });
+  background.adjustState({ features });
+  renderState(background.profilerState);
 });
 
-document.querySelector('.buffersize-range').addEventListener('change', e => {
-  self.port.emit('ProfilerControlEvent', { type: 'ChangeSetting', buffersize: gState.buffersize })
+document.querySelector('.js-checkbox').addEventListener('change', async e => {
+  const background = await getBackground();
+  const features = Object.assign({}, background.profilerState.features, { js: e.target.checked });
+  background.adjustState({ features });
+  renderState(background.profilerState);
 });
 
-document.querySelector('.stackwalk-checkbox').addEventListener('change', e => {
-  gState = Object.assign({}, gState, { stackwalk: e.target.checked });
-  self.port.emit('ProfilerControlEvent', { type: 'ChangeFeature', stackwalk: gState.stackwalk })
-  renderState(gState);
+document.querySelector('.tasktracer-checkbox').addEventListener('change', async e => {
+  const background = await getBackground();
+  const features = Object.assign({}, background.profilerState.features, { tasktracer: e.target.checked });
+  background.adjustState({ features });
+  renderState(background.profilerState);
 });
 
-document.querySelector('.js-checkbox').addEventListener('change', e => {
-  gState = Object.assign({}, gState, { js: e.target.checked });
-  self.port.emit('ProfilerControlEvent', { type: 'ChangeFeature', js: gState.js })
-  renderState(gState);
+document.querySelector('.threads-textbox').addEventListener('change', async e => {
+  const background = await getBackground();
+  background.adjustState({ threads: e.target.value });
+  renderState(background.profilerState);
 });
 
-document.querySelector('.tasktracer-checkbox').addEventListener('change', e => {
-  gState = Object.assign({}, gState, { tasktracer: e.target.checked });
-  self.port.emit('ProfilerControlEvent', { type: 'ChangeFeature', tasktracer: gState.tasktracer })
-  renderState(gState);
-});
-
-document.querySelector('.threads-textbox').addEventListener('change', e => {
-  gState = Object.assign({}, gState, { threads: e.target.value });
-  self.port.emit('ProfilerControlEvent', { type: 'ChangeSetting', threads: gState.threads })
-  renderState(gState);
-});
-
-document.querySelector('.settings-apply-button').addEventListener('click', e => {
-  self.port.emit('ProfilerControlEvent', { type: 'StopProfiler' });
-  self.port.emit('ProfilerControlEvent', { type: 'StartProfiler' });
+document.querySelector('.settings-apply-button').addEventListener('click', async e => {
+  (await getBackground()).restartProfiler();
 });
 
 function makeExponentialScale(rangeStart, rangeEnd) {
@@ -191,3 +181,5 @@ const prettyBytes = (function(module) {
 
   return module;
 })({}).exports;
+
+getBackground().then(background => renderState(background.profilerState));

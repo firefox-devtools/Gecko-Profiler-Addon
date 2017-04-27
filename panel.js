@@ -11,8 +11,7 @@ let gState = {
 
 const self = {
   port: {
-    on: (messageName, fun) => self._stuff.on.push({ messageName, fun }),
-    emit: (messageName, obj) => self._stuff.emit.push({ messageName, obj }),
+    emit: (data) => self._stuff.emit.push(data),
   },
   _stuff: {
     on: [],
@@ -21,17 +20,17 @@ const self = {
 };
 
 window.addEventListener("message", function(event) {
-  const port = event.ports[0];
-  self.port.emit = (messageName, obj) => port.postMessage({ messageName, obj });
-  port.onmessage = ({ data: { messageName, obj } }) => {
-    for (const listener of self._stuff.on) {
-      if (listener.messageName === messageName) {
-        listener.fun(obj);
-      }
-    }
-  };
-  self._stuff.emit.forEach(blob => port.postMessage(blob));
-  self._stuff.emit = [];
+  if (event.data.type == 'ParentReady') {
+    window.postMessage({ type: 'PanelConnected' }, '*');
+    self.port.emit = (blob) => window.postMessage(blob, '*');
+    self._stuff.emit.forEach(blob => window.postMessage(blob, '*'));
+    self._stuff.emit = [];
+  } else if (event.data.type == 'ProfilerStateUpdated') {
+    const { state } = event.data;
+    gState = Object.assign({}, gState, state);
+    renderState(gState);
+    renderControls(gState);
+  }
 });
 
 const intervalScale = makeExponentialScale(0.01, 100);
@@ -56,9 +55,6 @@ function renderState(state) {
   }
   const information = calculateInformation(state);
   document.querySelector('.relevancy-level-fill').style.width = `${information * 100}%`;
-
-  const height = document.body.getBoundingClientRect().height;
-  self.port.emit('ProfilerControlEvent', { type: 'PanelHeightUpdated', height });
 }
 
 function renderControls(state) {
@@ -103,23 +99,17 @@ function calculateInformation(state) {
   return clamp(informationFromSampling + informationFromBuffersize + informationFromStackwalk + informationFromJavaScrpt + informationFromTaskTracer, 0, 1);
 }
 
-self.port.on('ProfilerStateUpdated', state => {
-  gState = Object.assign({}, gState, state);
-  renderState(gState);
-  renderControls(gState);
-});
-
 document.querySelector('.button-start').addEventListener('click', () => {
-  self.port.emit('ProfilerControlEvent', { type: 'StartProfiler' });
+  self.port.emit({ type: 'ProfilerControlStartProfiler' });
 });
 
 document.querySelector('.button-cancel').addEventListener('click', () => {
-  self.port.emit('ProfilerControlEvent', { type: 'StopProfiler' });
+  self.port.emit({ type: 'ProfilerControlStopProfiler' });
 });
 
 document.querySelector('#button-capture').addEventListener('click', () => {
   if (document.documentElement.classList.contains('status-running')) {
-    self.port.emit('ProfilerControlEvent', { type: 'CaptureProfile' });
+    self.port.emit({ type: 'ProfilerControlCaptureProfile' });
   }
 });
 
@@ -141,40 +131,40 @@ document.querySelector('.buffersize-range').addEventListener('input', e => {
 });
 
 document.querySelector('.interval-range').addEventListener('change', e => {
-  self.port.emit('ProfilerControlEvent', { type: 'ChangeSetting', interval: gState.interval })
+  self.port.emit({ type: 'ProfilerControlChangeSetting', interval: gState.interval })
 });
 
 document.querySelector('.buffersize-range').addEventListener('change', e => {
-  self.port.emit('ProfilerControlEvent', { type: 'ChangeSetting', buffersize: gState.buffersize })
+  self.port.emit({ type: 'ProfilerControlChangeSetting', buffersize: gState.buffersize })
 });
 
 document.querySelector('.stackwalk-checkbox').addEventListener('change', e => {
   gState = Object.assign({}, gState, { stackwalk: e.target.checked });
-  self.port.emit('ProfilerControlEvent', { type: 'ChangeFeature', stackwalk: gState.stackwalk })
+  self.port.emit({ type: 'ProfilerControlChangeFeature', stackwalk: gState.stackwalk })
   renderState(gState);
 });
 
 document.querySelector('.js-checkbox').addEventListener('change', e => {
   gState = Object.assign({}, gState, { js: e.target.checked });
-  self.port.emit('ProfilerControlEvent', { type: 'ChangeFeature', js: gState.js })
+  self.port.emit({ type: 'ProfilerControlChangeFeature', js: gState.js })
   renderState(gState);
 });
 
 document.querySelector('.tasktracer-checkbox').addEventListener('change', e => {
   gState = Object.assign({}, gState, { tasktracer: e.target.checked });
-  self.port.emit('ProfilerControlEvent', { type: 'ChangeFeature', tasktracer: gState.tasktracer })
+  self.port.emit({ type: 'ProfilerControlChangeFeature', tasktracer: gState.tasktracer })
   renderState(gState);
 });
 
 document.querySelector('.threads-textbox').addEventListener('change', e => {
   gState = Object.assign({}, gState, { threads: e.target.value });
-  self.port.emit('ProfilerControlEvent', { type: 'ChangeSetting', threads: gState.threads })
+  self.port.emit({ type: 'ProfilerControlChangeSetting', threads: gState.threads })
   renderState(gState);
 });
 
 document.querySelector('.settings-apply-button').addEventListener('click', e => {
-  self.port.emit('ProfilerControlEvent', { type: 'StopProfiler' });
-  self.port.emit('ProfilerControlEvent', { type: 'StartProfiler' });
+  self.port.emit({ type: 'ProfilerControlStopProfiler' });
+  self.port.emit({ type: 'ProfilerControlStartProfiler' });
 });
 
 function makeExponentialScale(rangeStart, rangeEnd) {

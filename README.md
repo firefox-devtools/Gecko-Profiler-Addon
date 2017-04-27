@@ -18,8 +18,8 @@ That means that you can leave the profiler running, and collect a snapshot of th
 
 You can control the profiler with two keyboard shortcuts:
 
- - <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>1</kbd>: Stop / Restart profiling
- - <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>2</kbd>: Capture the profile. This captures the current contents of the profiler buffer, opens a tab with perf-html at `https://perf-html.io/`, and sends the profile to it.
+ - <kbd>Alt</kbd>+<kbd>1</kbd>: Stop / Restart profiling
+ - <kbd>Alt</kbd>+<kbd>2</kbd>: Capture the profile. This captures the current contents of the profiler buffer, opens a tab with perf-html at `https://perf-html.io/`, and sends the profile to it.
 
 If you want to run your own perf-html instance or want profiles to be sent to a different site that you're developing, you can change the “Reporter URL” preference of this add-on on `about:addons`.
 
@@ -28,15 +28,12 @@ If you want to run your own perf-html instance or want profiles to be sent to a 
 Make sure you have somewhat recent versions of node and npm installed. Then:
 
 ```bash
-$ git clone https://github.com/mstange/Gecko-Profiler-Addon/
+$ git clone https://github.com/devtools-html/Gecko-Profiler-Addon/
 $ cd Gecko-Profiler-Addon/
-$ npm install                 # installs jpm
-$ npm run start-mac-nightly   # runs jpm run --binary /Applications/FirefoxNightly.app
-$ # Or, if you're on a different platform, or want to use a different Firefox binary:
-$ npm start -- --binary /path/to/Firefox
+$ npm install -g web-ext
+$ web-ext run --firefox=<path-to-firefox>
 ```
 
 ## Known issues
 
  - Does not support getting profiles from Firefox for Android.
- - Does not allow symbolicating locally-built Firefox binaries on Windows.
