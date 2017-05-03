@@ -15,10 +15,11 @@ const injectFunction = () => {
       document.addEventListener("DOMContentLoaded", connectToPage);
     } else if (event.data.type === 'ProfilerGetSymbolTableReply') {
       const { debugName, breakpadId, status, result, error } = event.data;
-      const { resolve, reject } = symbolReplyPromiseMap.get([debugName, breakpadId].join(':'));
+      const promiseKey = [debugName, breakpadId].join(':');
+      const { resolve, reject } = symbolReplyPromiseMap.get(promiseKey);
+      symbolReplyPromiseMap.delete(promiseKey);
 
       if (status === 'success') {
-        console.log('success ' + debugName);
         const [ addresses, index, buffer ] = result;
         resolve([addresses, index, buffer]);
       } else {
@@ -31,7 +32,7 @@ const injectFunction = () => {
     if (window.connectToGeckoProfiler) {
       window.connectToGeckoProfiler({
         getProfile: () => Promise.resolve(gProfile),
-        getSymbolTable: (debugName, breakpadId) => getSymbolTable(debugName, breakpadId),
+        getSymbolTable,
       });
     }
   }

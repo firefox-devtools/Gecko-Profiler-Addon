@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Gecko Profiler",
-  "version": "0.1",
+  "version": "0.3",
   "description": "Gecko Profiler WebExtension.",
   "background": {
     "scripts": ["background.js"]
@@ -22,20 +22,22 @@
   "applications": {
     "gecko": {
       "id": "geckoprofiler@mozilla.com",
-      "strict_min_version": "54.0",
-      "updates": "https://raw.githubusercontent.com/devtools-html/Gecko-Profiler-Addon/master/updates.json"
+      "strict_min_version": "55.0a1",
+      "update_url": "https://raw.githubusercontent.com/devtools-html/Gecko-Profiler-Addon/master/updates.json"
     }
   },
   "commands": {
     "ToggleProfiler": {
       "suggested_key": {
-        "default": "Alt+1"
+        "default": "Ctrl+Shift+1",
+        "mac": "Command+Shift+1"
       },
       "description": "Toggles the profiler on/off."
     },
     "CaptureProfile": {
       "suggested_key": {
-        "default": "Alt+2"
+        "default": "Ctrl+Shift+2",
+        "mac": "Command+Shift+2"
       },
       "description": "Captures a profile if the profiler is on."
     }

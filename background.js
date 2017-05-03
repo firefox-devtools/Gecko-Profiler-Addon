@@ -122,12 +122,6 @@ async function restartProfiler() {
     });
   }
 
-  if (window.profilerState.isRunning) {
-    await startProfiler();
-  } else {
-    await stopProfiler();
-  }
-
   browser.geckoProfiler.onRunning.addListener(isRunning => {
     adjustState({ isRunning });
     browser.browserAction.setIcon({ path: `icons/toolbar_${isRunning ? 'on' : 'off' }.png` });
