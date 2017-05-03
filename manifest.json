@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Gecko Profiler",
-  "version": "0.3",
+  "version": "0.4",
   "description": "Gecko Profiler WebExtension.",
   "background": {
     "scripts": ["background.js"]
