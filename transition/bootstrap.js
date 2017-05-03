@@ -7,7 +7,7 @@ const { utils: Cu } = Components;
 
 Cu.import("resource://gre/modules/AddonManager.jsm");
 
-const NEW_ADDON_XPI_URL = "https://raw.githubusercontent.com/devtools-html/Gecko-Profiler-Addon/master/gecko_profiler-0.1.xpi";
+const NEW_ADDON_XPI_URL = "https://raw.githubusercontent.com/devtools-html/Gecko-Profiler-Addon/master/gecko_profiler.xpi";
 const ADDON_ID = "jid0-edalmuivkozlouyij0lpdx548bc@jetpack";
 
 const installListener = {
