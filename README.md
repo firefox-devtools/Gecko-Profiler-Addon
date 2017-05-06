@@ -18,8 +18,8 @@ That means that you can leave the profiler running, and collect a snapshot of th
 
 You can control the profiler with two keyboard shortcuts:
 
- - <kbd>Alt</kbd>+<kbd>1</kbd>: Stop / Restart profiling
- - <kbd>Alt</kbd>+<kbd>2</kbd>: Capture the profile. This captures the current contents of the profiler buffer, opens a tab with perf-html at `https://perf-html.io/`, and sends the profile to it.
+ - <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>1</kbd>: Stop / Restart profiling
+ - <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>2</kbd>: Capture the profile. This captures the current contents of the profiler buffer, opens a tab with perf-html at `https://perf-html.io/`, and sends the profile to it.
 
 If you want to run your own perf-html instance or want profiles to be sent to a different site that you're developing, you can change the “Reporter URL” preference of this add-on on `about:addons`.
 
