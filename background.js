@@ -1,3 +1,5 @@
+/* global browser */
+
 function adjustState(newState) {
   Object.assign(window.profilerState, newState);
   browser.storage.local.set({ profilerState: window.profilerState });
@@ -41,7 +43,7 @@ async function createAndWaitForTab(url) {
 
   const tabPromise = browser.tabs.create({
     active: true,
-    url: window.profilerState.reportUrl,
+    url,
   });
 
   const tab = await tabPromise;
@@ -75,7 +77,7 @@ async function captureProfile() {
     makeProfileAvailableToTab(profile, port);
   } catch (e) {
     console.error(e);
-    const { tab } = await tabOpenPromise;
+    // const { tab } = await tabOpenPromise;
     // TODO data URL doesn't seem to be working. Permissions issue?
     // await browser.tabs.update(tab.id, { url: `data:text/html,${encodeURIComponent(e.toString)}` });
   }
@@ -110,6 +112,7 @@ async function stopProfiler() {
   await browser.geckoProfiler.stop();
 }
 
+/* exported restartProfiler */
 async function restartProfiler() {
   await stopProfiler();
   await startProfiler();
