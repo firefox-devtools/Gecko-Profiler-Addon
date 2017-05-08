@@ -3,6 +3,10 @@
   "name": "Gecko Profiler",
   "version": "0.6",
   "description": "Gecko Profiler WebExtension.",
+  "icons": {
+    "32": "icons/icon.png",
+    "64": "icons/icon@2x.png"
+  },
   "background": {
     "scripts": ["background.js"]
   },
