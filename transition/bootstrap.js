@@ -5,28 +5,31 @@
 
 const { utils: Cu } = Components;
 
-Cu.import("resource://gre/modules/AddonManager.jsm");
+Cu.import('resource://gre/modules/AddonManager.jsm');
 
-const NEW_ADDON_XPI_URL = "https://raw.githubusercontent.com/devtools-html/Gecko-Profiler-Addon/master/gecko_profiler.xpi";
-const ADDON_ID = "jid0-edalmuivkozlouyij0lpdx548bc@jetpack";
+const NEW_ADDON_XPI_URL =
+  'https://raw.githubusercontent.com/devtools-html/Gecko-Profiler-Addon/master/gecko_profiler.xpi';
+const ADDON_ID = 'jid0-edalmuivkozlouyij0lpdx548bc@jetpack';
 
 const installListener = {
   onInstallEnded() {
     AddonManager.getAddonByID(ADDON_ID, addon => {
       addon.uninstall();
     });
-  }
-}
+  },
+};
 
 function startup() {
-  AddonManager.getInstallForURL(NEW_ADDON_XPI_URL, (install) => {
-    install.addListener(installListener);
-    install.install();
-  }, "application/x-xpinstall");
+  AddonManager.getInstallForURL(
+    NEW_ADDON_XPI_URL,
+    install => {
+      install.addListener(installListener);
+      install.install();
+    },
+    'application/x-xpinstall'
+  );
 }
 
 function shutdown() {}
 function install() {}
 function uninstall() {}
-
-

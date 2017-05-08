@@ -12,7 +12,7 @@ const injectFunction = () => {
     if (event.data.type === 'ProfilerConnectToPage') {
       gProfile = event.data.payload;
       connectToPage();
-      document.addEventListener("DOMContentLoaded", connectToPage);
+      document.addEventListener('DOMContentLoaded', connectToPage);
     } else if (event.data.type === 'ProfilerGetSymbolTableReply') {
       const { debugName, breakpadId, status, result, error } = event.data;
       const promiseKey = [debugName, breakpadId].join(':');
@@ -20,7 +20,7 @@ const injectFunction = () => {
       symbolReplyPromiseMap.delete(promiseKey);
 
       if (status === 'success') {
-        const [ addresses, index, buffer ] = result;
+        const [addresses, index, buffer] = result;
         resolve([addresses, index, buffer]);
       } else {
         reject(error);
@@ -39,8 +39,14 @@ const injectFunction = () => {
 
   function getSymbolTable(debugName, breakpadId) {
     return new Promise((resolve, reject) => {
-      window.postMessage({type: 'ProfilerGetSymbolTable', debugName, breakpadId}, '*');
-      symbolReplyPromiseMap.set([debugName, breakpadId].join(':'), { resolve, reject });
+      window.postMessage(
+        { type: 'ProfilerGetSymbolTable', debugName, breakpadId },
+        '*'
+      );
+      symbolReplyPromiseMap.set([debugName, breakpadId].join(':'), {
+        resolve,
+        reject,
+      });
     });
   }
 };
@@ -63,7 +69,10 @@ window.addEventListener('message', event => {
 });
 
 port.onMessage.addListener((message, sender, sendResponse) => {
-  const validMessages = ['ProfilerConnectToPage', 'ProfilerGetSymbolTableReply'];
+  const validMessages = [
+    'ProfilerConnectToPage',
+    'ProfilerGetSymbolTableReply',
+  ];
   if (message.type === 'ProfilerGetSymbolTableReply') {
     if (message.status === 'success') {
       window.postMessage(message, '*', message.result.map(r => r.buffer));

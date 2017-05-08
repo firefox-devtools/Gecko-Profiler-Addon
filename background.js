@@ -1,6 +1,6 @@
 function adjustState(newState) {
   Object.assign(window.profilerState, newState);
-  browser.storage.local.set({profilerState: window.profilerState});
+  browser.storage.local.set({ profilerState: window.profilerState });
 }
 
 function makeProfileAvailableToTab(profile, port) {
@@ -10,20 +10,26 @@ function makeProfileAvailableToTab(profile, port) {
     if (message.type === 'ProfilerGetSymbolTable') {
       const { debugName, breakpadId } = message;
       try {
-        const [ addresses, index, buffer ] = await browser.geckoProfiler.getSymbols(debugName, breakpadId);
+        const [
+          addresses,
+          index,
+          buffer,
+        ] = await browser.geckoProfiler.getSymbols(debugName, breakpadId);
 
         port.postMessage({
           type: 'ProfilerGetSymbolTableReply',
           status: 'success',
           result: [addresses, index, buffer],
-          debugName, breakpadId
+          debugName,
+          breakpadId,
         });
       } catch (e) {
         port.postMessage({
           type: 'ProfilerGetSymbolTableReply',
           status: 'error',
           error: `${e}`,
-          debugName, breakpadId
+          debugName,
+          breakpadId,
         });
       }
     }
@@ -45,7 +51,7 @@ async function createAndWaitForTab(url) {
 
 async function listenOnceForConnect(name) {
   window.connectDeferred[name] = {};
-  window.connectDeferred[name].promise = new Promise((resolve, reject) =>  {
+  window.connectDeferred[name].promise = new Promise((resolve, reject) => {
     Object.assign(window.connectDeferred[name], { resolve, reject });
   });
   return await window.connectDeferred[name].promise;
@@ -56,11 +62,16 @@ async function captureProfile() {
   // more samples while the parent process waits for subprocess profiles.
   await browser.geckoProfiler.pause().catch(() => {});
 
-  const profilePromise = browser.geckoProfiler.getProfile().catch(e => (console.error(e), {}));
+  const profilePromise = browser.geckoProfiler
+    .getProfile()
+    .catch(e => (console.error(e), {}));
   const tabOpenPromise = createAndWaitForTab(window.profilerState.reportUrl);
 
   try {
-    const [profile, { port }] = await Promise.all([profilePromise, tabOpenPromise]);
+    const [profile, { port }] = await Promise.all([
+      profilePromise,
+      tabOpenPromise,
+    ]);
     makeProfileAvailableToTab(profile, port);
   } catch (e) {
     console.error(e);
@@ -78,11 +89,13 @@ async function captureProfile() {
 
 async function startProfiler() {
   const settings = window.profilerState;
-  const threads = settings.threads.split(",");
-  const enabledFeatures = Object.keys(settings.features).filter(f => settings.features[f]);
-  enabledFeatures.push("leaf");
+  const threads = settings.threads.split(',');
+  const enabledFeatures = Object.keys(settings.features).filter(
+    f => settings.features[f]
+  );
+  enabledFeatures.push('leaf');
   if (threads.length > 0) {
-    enabledFeatures.push("threads");
+    enabledFeatures.push('threads');
   }
   const options = {
     bufferSize: settings.buffersize,
@@ -103,7 +116,9 @@ async function restartProfiler() {
 }
 
 (async () => {
-  window.profilerState = (await browser.storage.local.get('profilerState')).profilerState;
+  window.profilerState = (await browser.storage.local.get(
+    'profilerState'
+  )).profilerState;
 
   if (!window.profilerState) {
     window.profilerState = {};
@@ -124,7 +139,9 @@ async function restartProfiler() {
 
   browser.geckoProfiler.onRunning.addListener(isRunning => {
     adjustState({ isRunning });
-    browser.browserAction.setIcon({ path: `icons/toolbar_${isRunning ? 'on' : 'off' }.png` });
+    browser.browserAction.setIcon({
+      path: `icons/toolbar_${isRunning ? 'on' : 'off'}.png`,
+    });
     for (const popup of browser.extension.getViews({ type: 'popup' })) {
       popup.renderState(window.profilerState);
     }
@@ -151,4 +168,3 @@ async function restartProfiler() {
     }
   });
 })();
-
