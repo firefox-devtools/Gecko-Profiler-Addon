@@ -26,6 +26,19 @@ function renderState(state) {
   document.querySelector(
     '.relevancy-level-fill'
   ).style.width = `${information * 100}%`;
+
+  renderControls(state);
+}
+
+function renderControls(state) {
+  document.querySelector('.interval-range').value =
+    intervalScale.fromValueToFraction(state.interval) * 100;
+  document.querySelector('.buffersize-range').value =
+    buffersizeScale.fromValueToFraction(state.buffersize) * 100;
+  document.querySelector('.stackwalk-checkbox').value = state.stackwalk;
+  document.querySelector('.js-checkbox').value = state.js;
+  document.querySelector('.tasktracer-checkbox').value = state.tasktracer;
+  document.querySelector('.threads-textbox').value = state.threads;
 }
 
 function clamp(val, min, max) {
