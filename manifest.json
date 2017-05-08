@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Gecko Profiler",
-  "version": "0.4",
+  "version": "0.6",
   "description": "Gecko Profiler WebExtension.",
   "background": {
     "scripts": ["background.js"]
@@ -30,14 +30,14 @@
     "ToggleProfiler": {
       "suggested_key": {
         "default": "Ctrl+Shift+1",
-        "mac": "Command+Shift+1"
+        "mac": "MacCtrl+Shift+1"
       },
       "description": "Toggles the profiler on/off."
     },
     "CaptureProfile": {
       "suggested_key": {
         "default": "Ctrl+Shift+2",
-        "mac": "Command+Shift+2"
+        "mac": "MacCtrl+Shift+2"
       },
       "description": "Captures a profile if the profiler is on."
     }
