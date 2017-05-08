@@ -5,6 +5,8 @@
   "author": "Markus Stange <mstange@themasta.com>",
   "license": "MIT",
   "devDependencies": {
+    "husky": "^0.13.3",
+    "lint-staged": "^3.4.1",
     "prettier": "^1.3.1",
     "web-ext": "^1.8.1"
   },
@@ -13,6 +15,17 @@
     "start": "web-ext run",
     "start-mac-nightly": "web-ext run --firefox=/Applications/FirefoxNightly.app",
     "build": "web-ext build -i README.md package.json *.rdf transition resources",
-    "prettier": "prettier --single-quote --trailing-comma es5 --write \"./!(node_modules)**/*.js\" *.js"
+    "prettier": "prettier --single-quote --trailing-comma es5 --write \"./!(node_modules)**/*.js\" *.js",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --single-quote --trailing-comma es5 --write",
+      "git add"
+    ],
+    "./!(node_modules)**/*.js": [
+      "prettier --single-quote --trailing-comma es5 --write",
+      "git add"
+    ]
   }
 }
