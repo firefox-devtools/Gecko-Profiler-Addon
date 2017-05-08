@@ -1,7 +1,9 @@
 {
   "addons": {
-    "geckoprofiler@mozilla.com": [
-      { "version": "0.7", "update_link": "https://raw.githubusercontent.com/devtools-html/Gecko-Profiler-Addon/master/gecko_profiler.xpi" }
-    ]
+    "geckoprofiler@mozilla.com": {
+      "updates": [
+        { "version": "0.7", "update_link": "https://raw.githubusercontent.com/devtools-html/Gecko-Profiler-Addon/master/gecko_profiler.xpi" }
+      ]
+    }
   }
 }
