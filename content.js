@@ -68,11 +68,11 @@ window.addEventListener('message', event => {
   }
 });
 
-port.onMessage.addListener((message, sender, sendResponse) => {
-  const validMessages = [
-    'ProfilerConnectToPage',
-    'ProfilerGetSymbolTableReply',
-  ];
+port.onMessage.addListener(message => {
+  // const validMessages = [
+  //   'ProfilerConnectToPage',
+  //   'ProfilerGetSymbolTableReply',
+  // ];
   if (message.type === 'ProfilerGetSymbolTableReply') {
     if (message.status === 'success') {
       window.postMessage(message, '*', message.result.map(r => r.buffer));
