@@ -1,0 +1,16 @@
+{
+  "title": "Gecko Profiler",
+  "name": "geckoprofiler",
+  "description": "Collect platform profiles from Firefox Desktop.",
+  "author": "Markus Stange <mstange@themasta.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "web-ext": "^1.8.1"
+  },
+  "repository": "https://github.com/devtools-html/Gecko-Profiler-Addon",
+  "scripts": {
+    "start": "web-ext run",
+    "start-mac-nightly": "web-ext run --firefox=/Applications/FirefoxNightly.app",
+    "build": "web-ext build -i README.md package.json *.rdf transition resources"
+  }
+}
