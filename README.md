@@ -34,15 +34,15 @@ $ npm install
 $ npm start
 ```
 
-To run other releases of Firefox use the following `npm start` commands.
+The `npm start` command runs [Firefox Nightly](http://nightly.mozilla.org/) by default. To run other releases of Firefox use the following `npm start` commands.
 
-#### Beta Firefox
+#### [Beta Firefox](https://www.mozilla.org/en-US/firefox/channel/desktop/#beta)
 
 ```bash
 npm start --geckoprofiler:firefox=beta
 ```
 
-#### Release Firefox
+#### [Release Firefox](https://www.mozilla.org/firefox/)
 
 ```bash
 npm start --geckoprofiler:firefox=firefox
