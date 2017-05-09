@@ -30,8 +30,31 @@ Make sure you have somewhat recent versions of node and npm installed. Then:
 ```bash
 $ git clone https://github.com/devtools-html/Gecko-Profiler-Addon/
 $ cd Gecko-Profiler-Addon/
-$ npm install -g web-ext
-$ web-ext run --firefox=<path-to-firefox>
+$ npm install
+$ npm start
+```
+
+The `npm start` command runs [Firefox Nightly](http://nightly.mozilla.org/) by default. To run other releases of Firefox use the following `npm start` commands.
+
+#### [Beta Firefox](https://www.mozilla.org/en-US/firefox/channel/desktop/#beta)
+
+```bash
+npm start --geckoprofiler:firefox=beta
+```
+
+#### [Release Firefox](https://www.mozilla.org/firefox/)
+
+```bash
+npm start --geckoprofiler:firefox=firefox
+```
+
+#### Release config
+
+Or you can set the local config to keep the default for the life of your local repository and no longer need to pass the config on the command line.
+
+```bash
+npm config set geckoprofiler:firefox beta
+npm start
 ```
 
 ## Known issues
