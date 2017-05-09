@@ -154,6 +154,7 @@ document
     if (document.documentElement.classList.contains('status-running')) {
       const background = await getBackground();
       await background.captureProfile();
+      window.close();
     }
   });
 
