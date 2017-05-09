@@ -14,9 +14,9 @@
     "web-ext": "^1.8.1"
   },
   "repository": "https://github.com/devtools-html/Gecko-Profiler-Addon",
+  "config" : { "firefox" : "nightly" },
   "scripts": {
-    "start": "web-ext run",
-    "start-mac-nightly": "web-ext run --firefox=/Applications/FirefoxNightly.app",
+    "start": "web-ext run --firefox=$npm_package_config_firefox",
     "build": "web-ext build -i README.md package.json *.rdf transition resources",
     "prettier": "prettier --single-quote --trailing-comma es5 --write \"./!(node_modules)**/*.js\" *.js",
     "precommit": "lint-staged"
