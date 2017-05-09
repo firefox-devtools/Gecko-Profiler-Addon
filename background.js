@@ -1,6 +1,9 @@
 /* global browser */
 
 function adjustState(newState) {
+  // Deep clone the object, since this can be called through popup.html,
+  // which can be unloaded thus leaving this object dead.
+  newState = JSON.parse(JSON.stringify(newState));
   Object.assign(window.profilerState, newState);
   browser.storage.local.set({ profilerState: window.profilerState });
 }
