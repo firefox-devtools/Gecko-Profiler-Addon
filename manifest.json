@@ -15,14 +15,6 @@
     "default_title": "Gecko Profiler",
     "default_icon": "icons/toolbar_off.png"
   },
-  "content_scripts": [
-    {
-      "all_frames": false,
-      "js": ["content.js"],
-      "matches": ["https://perf-html.io/*"],
-      "run_at": "document_start"
-    }
-  ],
   "applications": {
     "gecko": {
       "id": "geckoprofiler@mozilla.com",

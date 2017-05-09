@@ -1,5 +1,7 @@
 /* global browser */
 
+const DEFAULT_VIEWER_URL = 'https://perf-html.io';
+
 function adjustState(newState) {
   // Deep clone the object, since this can be called through popup.html,
   // which can be unloaded thus leaving this object dead.
@@ -50,6 +52,8 @@ async function createAndWaitForTab(url) {
   });
 
   const tab = await tabPromise;
+  await browser.tabs.executeScript(tab.id, { file: 'content.js' });
+
   const port = await listenForConnectPromise;
   return { tab, port };
 }
@@ -70,7 +74,11 @@ async function captureProfile() {
   const profilePromise = browser.geckoProfiler
     .getProfile()
     .catch(e => (console.error(e), {}));
-  const tabOpenPromise = createAndWaitForTab(window.profilerState.reportUrl);
+
+  const { profileViewerURL } = await browser.storage.local.get({
+    profileViewerURL: DEFAULT_VIEWER_URL,
+  });
+  const tabOpenPromise = createAndWaitForTab(profileViewerURL + '/from-addon');
 
   try {
     const [profile, { port }] = await Promise.all([
