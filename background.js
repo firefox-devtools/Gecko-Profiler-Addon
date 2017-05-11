@@ -66,14 +66,23 @@ async function listenOnceForConnect(name) {
   return await window.connectDeferred[name].promise;
 }
 
+function getProfilePreferablyAsArrayBuffer() {
+  // This is a compatibility wrapper for Firefox builds from before 1362800
+  // landed. We can remove it once Nightly switches to 56.
+  if ('getProfileAsArrayBuffer' in browser.geckoProfiler) {
+    return browser.geckoProfiler.getProfileAsArrayBuffer();
+  }
+  return browser.geckoProfiler.getProfile();
+}
+
 async function captureProfile() {
   // Pause profiler before we collect the profile, so that we don't capture
   // more samples while the parent process waits for subprocess profiles.
   await browser.geckoProfiler.pause().catch(() => {});
 
-  const profilePromise = browser.geckoProfiler
-    .getProfile()
-    .catch(e => (console.error(e), {}));
+  const profilePromise = getProfilePreferablyAsArrayBuffer().catch(
+    e => (console.error(e), {})
+  );
 
   const { profileViewerURL } = await browser.storage.local.get({
     profileViewerURL: DEFAULT_VIEWER_URL,
