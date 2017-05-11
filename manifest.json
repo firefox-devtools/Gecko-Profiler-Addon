@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Gecko Profiler",
-  "version": "0.10",
+  "version": "0.11",
   "description": "Gecko Profiler WebExtension.",
   "icons": {
     "32": "icons/icon.png",
@@ -14,6 +14,9 @@
     "default_popup": "popup.html",
     "default_title": "Gecko Profiler",
     "default_icon": "icons/toolbar_off.png"
+  },
+  "options_ui": {
+    "page": "options.html"
   },
   "applications": {
     "gecko": {
