@@ -1,0 +1,26 @@
+{
+  "plugins": [
+    "transform-react-jsx",
+    "transform-class-properties"
+  ],
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": [
+            "Firefox > 54"
+          ]
+        },
+        "modules": false
+      }
+    ]
+  ],
+  "env": {
+    "test": {
+      "presets": [
+        "env"
+      ]
+    }
+  }
+}

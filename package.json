@@ -5,20 +5,31 @@
   "author": "Markus Stange <mstange@themasta.com>",
   "license": "MIT",
   "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.4.0",
     "eslint": "^3.19.0",
     "eslint-config-prettier": "^2.0.0",
     "eslint-plugin-prettier": "^2.0.1",
+    "eslint-plugin-react": "^7.0.0",
     "husky": "^0.13.3",
     "lint-staged": "^3.4.1",
     "prettier": "^1.3.1",
-    "web-ext": "^1.8.1"
+    "redux-logger": "^3.0.1",
+    "web-ext": "^1.8.1",
+    "webpack": "^2.5.1"
   },
   "repository": "https://github.com/devtools-html/Gecko-Profiler-Addon",
-  "config" : { "firefox" : "nightly" },
+  "config": {
+    "firefox": "nightly"
+  },
   "scripts": {
     "start": "web-ext run --firefox=$npm_package_config_firefox",
+    "dev": "webpack -p --progress --colors --watch",
     "build": "web-ext build -i README.md package.json *.rdf transition resources",
-    "prettier": "prettier --single-quote --trailing-comma es5 --write \"./!(node_modules)**/*.js\" *.js",
+    "prettier": "prettier --single-quote --trailing-comma es5 --write \"./!(node_modules)**/*.js\" \"./src/**/*.js\" *.js",
     "precommit": "lint-staged"
   },
   "lint-staged": {
@@ -30,5 +41,16 @@
       "prettier --single-quote --trailing-comma es5 --write",
       "git add"
     ]
+  },
+  "dependencies": {
+    "classnames": "^2.2.5",
+    "prop-types": "^15.5.9",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-redux": "^5.0.4",
+    "redux": "^3.6.0",
+    "redux-subscriber": "^1.1.0",
+    "redux-thunk": "^2.2.0",
+    "redux-webext": "^1.1.2"
   }
 }

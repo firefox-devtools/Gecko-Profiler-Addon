@@ -30,8 +30,8 @@ body {
   margin: -2px 3px -20px;
 }
 
-:root.status-stopped .status-display:not(.status-display-stopped) { display: none; }
-:root.status-running .status-display:not(.status-display-running) { display: none; }
+#page.status-stopped .status-display:not(.status-display-stopped) { display: none; }
+#page.status-running .status-display:not(.status-display-running) { display: none; }
 
 .status-display-stopped {
   background: hsl(210, 80%, 85%);
@@ -113,15 +113,15 @@ body {
   position: relative;
 }
 
-:root.status-stopped #button-capture {
+#page.status-stopped #button-capture {
   color: GrayText;
 }
 
-:root.status-running #button-capture:hover {
+#page.status-running #button-capture:hover {
   background: linear-gradient(#EEE, #DDD);
 }
 
-:root.status-running #button-capture:hover:active {
+#page.status-running #button-capture:hover:active {
   background: #CCC;
   border-color: #BBB;
 }
@@ -143,7 +143,7 @@ body {
   left: 10px;
 }
 
-:root.status-stopped #capture-label::before {
+#page.status-stopped #capture-label::before {
   opacity: 0.5;
 }
 

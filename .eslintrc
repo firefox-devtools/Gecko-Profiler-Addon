@@ -1,5 +1,6 @@
 {
   "plugins": [
+    "react",
     "prettier"
   ],
   "rules": {
@@ -20,15 +21,20 @@
     ]
   },
   "parserOptions": {
-    "ecmaVersion": 2017
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
   "env": {
     "es6": true,
-    "browser": true,
-    "webextensions": true
+    "node": true,
+    "browser": true
   },
   "extends": [
     "eslint:recommended",
-    "prettier"
+    "plugin:react/recommended",
+    "prettier",
+    "prettier/react"
   ]
 }
