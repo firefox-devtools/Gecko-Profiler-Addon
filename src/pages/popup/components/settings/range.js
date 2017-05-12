@@ -29,7 +29,7 @@ export default class Range extends PureComponent {
             min="0"
             max="100"
             value={scale.fromValueToFraction(value) * 100}
-            onInput={this.handleInput}
+            onChange={this.handleInput}
           />
           <span className={classnames('range-value', `${type}-value`)}>
             {display(value)}
