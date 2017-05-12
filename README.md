@@ -34,6 +34,11 @@ $ npm install
 $ npm start
 ```
 
+```bash
+$ # in another terminal tab
+$ npm run dev
+```
+
 The `npm start` command runs [Firefox Nightly](http://nightly.mozilla.org/) by default. To run other releases of Firefox use the following `npm start` commands.
 
 #### [Beta Firefox](https://www.mozilla.org/en-US/firefox/channel/desktop/#beta)
@@ -55,6 +60,14 @@ Or you can set the local config to keep the default for the life of your local r
 ```bash
 npm config set geckoprofiler:firefox beta
 npm start
+```
+
+## UI Only
+
+If you want to work on only the UI components for updating the CSS/HTML of the popup or options pages use storybook. Storybook will "hot reload" all your changes allowing you to develop the pages quickly without running them in the extension.
+
+```bash
+$ npm run storybook
 ```
 
 ## Known issues
