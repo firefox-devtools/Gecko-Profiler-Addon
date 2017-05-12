@@ -5,6 +5,7 @@ module.exports = function() {
     entry: {
       background: join(__dirname, './src/pages/background/index.js'),
       popup: join(__dirname, './src/pages/popup/index.js'),
+      options: join(__dirname, './src/pages/options/index.js'),
       // content: join(__dirname, './src/pages/content/index.js'),
     },
     output: {
