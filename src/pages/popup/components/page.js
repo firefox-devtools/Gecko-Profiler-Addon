@@ -6,6 +6,8 @@ import classnames from 'classnames';
 import * as actions from '../actions';
 
 import Profiler from './profiler';
+import Overhead from './overhead';
+import Information from './information';
 import Settings from './settings';
 
 class Page extends PureComponent {
@@ -17,7 +19,6 @@ class Page extends PureComponent {
       stop,
       capture,
       restart,
-      open,
       update,
     } = this.props;
 
@@ -34,12 +35,13 @@ class Page extends PureComponent {
           stop={stop}
           capture={capture}
         />
-        <Settings
-          open={open}
-          update={update}
-          settings={settings}
-          restart={restart}
-        />
+        <dl className="info-density">
+          <dt>Overhead:</dt>
+          <Overhead settings={settings} />
+          <dt>Information:</dt>
+          <Information settings={settings} />
+        </dl>
+        <Settings update={update} settings={settings} restart={restart} />
       </div>
     );
   }
@@ -52,7 +54,6 @@ Page.propTypes = {
   stop: PropTypes.func.isRequired,
   restart: PropTypes.func.isRequired,
   capture: PropTypes.func.isRequired,
-  open: PropTypes.func.isRequired,
   update: PropTypes.func.isRequired,
 };
 

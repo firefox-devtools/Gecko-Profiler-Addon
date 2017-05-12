@@ -12,7 +12,7 @@
             "Firefox > 54"
           ]
         },
-        "modules": false
+        "modules": "commonjs"
       }
     ]
   ],

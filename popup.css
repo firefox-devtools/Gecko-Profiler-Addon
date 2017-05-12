@@ -269,7 +269,7 @@ kbd {
   background-size: 400px 20px;
 }
 
-.settings-content {
+.settings-content > div {
   margin: 0;
   padding: 0 10px;
   line-height: 22px;

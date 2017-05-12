@@ -1,7 +1,7 @@
-export function update(settings = {}) {
+export function update({ data = {} }) {
   return {
     type: 'UPDATE_SETTINGS',
-    data: settings,
+    data,
   };
 }
 
