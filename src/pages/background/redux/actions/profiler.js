@@ -39,6 +39,17 @@ export function stop() {
   };
 }
 
+function getProfilePreferablyAsArrayBuffer() {
+  // This is a compatibility wrapper for Firefox builds from before 1362800
+  // landed. We can remove it once Nightly switches to 56.
+  if ('getProfileAsArrayBuffer' in browser.geckoProfiler) {
+    return browser.geckoProfiler
+      .getProfileAsArrayBuffer()
+      .catch(e => (console.error(e), {}));
+  }
+  return browser.geckoProfiler.getProfile().catch(e => (console.error(e), {}));
+}
+
 export function capture() {
   return async (dispatch, getState) => {
     // Pause profiler before we collect the profile, so that we don't capture
@@ -55,9 +66,7 @@ export function capture() {
         },
         async tab => {
           dispatch({ type: 'PROFILER_CAPTURING' });
-          const profile = await browser.geckoProfiler
-            .getProfile()
-            .catch(e => (console.error(e), {}));
+          const profile = await getProfilePreferablyAsArrayBuffer();
           dispatch({ type: 'PROFILER_CAPTURED' });
           browser.tabs.sendMessage(tab.id, {
             type: 'ProfilerConnectToPage',
