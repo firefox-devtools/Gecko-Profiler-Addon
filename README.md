@@ -34,6 +34,8 @@ $ npm install
 $ npm start
 ```
 
+Now we need to run `webpack` to build our source code modules into the top level background, options, and popup files.
+
 ```bash
 $ # in another terminal tab
 $ npm run dev
