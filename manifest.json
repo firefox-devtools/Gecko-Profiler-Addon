@@ -45,5 +45,8 @@
     "geckoProfiler",
     "storage",
     "https://perf-html.io/*"
+  ],
+  "optional_permissions": [
+    "<all_urls>"
   ]
 }

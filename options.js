@@ -33,6 +33,7 @@ async function saveOptions(e) {
           const errorDiv = document.createElement('div');
           errorDiv.textContent = 'Failed to set permission: ' + key;
           errorsNode.appendChild(errorDiv);
+          console.error(e);
         }
         break;
     }
