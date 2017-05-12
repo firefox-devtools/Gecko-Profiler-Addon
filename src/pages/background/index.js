@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import browserAction from './browserAction';
 import commands from './commands';
 import profiler from './profiler';

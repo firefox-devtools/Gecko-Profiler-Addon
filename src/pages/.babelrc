@@ -1,0 +1,20 @@
+{
+  "plugins": [
+    "transform-react-jsx",
+    "transform-class-properties",
+    "transform-runtime"
+  ],
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": [
+            "Firefox > 54"
+          ]
+        },
+        "modules": false
+      }
+    ]
+  ]
+}

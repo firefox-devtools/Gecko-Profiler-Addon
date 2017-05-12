@@ -82,9 +82,13 @@ export function capture() {
 }
 
 export function restart() {
-  return async dispatch => {
-    dispatch(start());
-    dispatch(stop());
+  return async (dispatch, getState) => {
+    const wasRunning = getState().profiler.isRunning;
+
+    await dispatch(stop());
+    if (wasRunning) {
+      await dispatch(start());
+    }
   };
 }
 

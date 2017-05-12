@@ -1,7 +1,8 @@
 {
   "plugins": [
     "transform-react-jsx",
-    "transform-class-properties"
+    "transform-class-properties",
+    "transform-runtime"
   ],
   "presets": [
     [
@@ -15,12 +16,5 @@
         "modules": "commonjs"
       }
     ]
-  ],
-  "env": {
-    "test": {
-      "presets": [
-        "env"
-      ]
-    }
-  }
+  ]
 }

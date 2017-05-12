@@ -28,7 +28,7 @@ export default class Range extends PureComponent {
             className={classnames('range-input', `${type}-range`)}
             min="0"
             max="100"
-            dafaultValue={scale.fromValueToFraction(value) * 100}
+            value={scale.fromValueToFraction(value) * 100}
             onInput={this.handleInput}
           />
           <span className={classnames('range-value', `${type}-value`)}>
