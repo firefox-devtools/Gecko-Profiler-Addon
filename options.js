@@ -11492,10 +11492,9 @@ object-assign
           {
             key: 'onSubmitHandled',
             value: function(e) {
-              e.preventDefault();
-              var t = this.props, n = t.update;
-              t.restart;
-              return n({ reportUrl: e.target.value }), !1;
+              return e.preventDefault(), (0, this.props.update)({
+                reportUrl: e.target.value,
+              }), !1;
             },
           },
           {
@@ -11524,7 +11523,6 @@ object-assign
       })(d.PureComponent);
     (b.propTypes = {
       settings: m.a.object.isRequired,
-      restart: m.a.func.isRequired,
       update: m.a.func.isRequired,
     }), (t.a = n.i(y.b)(function(e) {
       return e;

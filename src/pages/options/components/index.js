@@ -21,7 +21,7 @@ class Options extends PureComponent {
 
   onSubmitHandled(e) {
     e.preventDefault();
-    const { update, restart } = this.props;
+    const { update } = this.props;
     update({ reportUrl: e.target.value });
     return false;
   }
@@ -43,7 +43,6 @@ class Options extends PureComponent {
 
 Options.propTypes = {
   settings: PropTypes.object.isRequired,
-  restart: PropTypes.func.isRequired,
   update: PropTypes.func.isRequired,
 };
 
