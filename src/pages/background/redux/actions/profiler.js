@@ -25,17 +25,17 @@ export function start() {
       features: enabledFeatures,
       threads,
     };
-    dispatch({ type: 'PROFILER_STARTING' });
+    dispatch({ type: 'PROFILER_START', status: 'start' });
     await browser.geckoProfiler.start(options).catch(() => {});
-    dispatch({ type: 'PROFILER_STARTED' });
+    dispatch({ type: 'PROFILER_START', status: 'done' });
   };
 }
 
 export function stop() {
   return async dispatch => {
-    dispatch({ type: 'PROFILER_STOPPING' });
+    dispatch({ type: 'PROFILER_STOP', status: 'start' });
     await browser.geckoProfiler.stop();
-    dispatch({ type: 'PROFILER_STOPPED' });
+    dispatch({ type: 'PROFILER_STOP', status: 'done' });
   };
 }
 
@@ -54,36 +54,32 @@ export function capture() {
   return async (dispatch, getState) => {
     // Pause profiler before we collect the profile, so that we don't capture
     // more samples while the parent process waits for subprocess profiles.
-    dispatch({ type: 'PROFILER_PAUSING' });
+    dispatch({ type: 'PROFILER_PAUSE', status: 'start' });
     await browser.geckoProfiler.pause().catch(() => {});
-    dispatch({ type: 'PROFILER_PAUSED' });
+    dispatch({ type: 'PROFILER_PAUSE', status: 'done' });
 
-    try {
-      browser.tabs.create(
-        {
-          active: true,
-          url: getState().settings.reportUrl,
-        },
-        async tab => {
-          dispatch({ type: 'PROFILER_CAPTURING' });
+    browser.tabs
+      .create({
+        active: true,
+        url: getState().settings.reportUrl,
+      })
+      .then(
+        async () => {
+          dispatch({ type: 'PROFILER_CAPTURE', status: 'start' });
           const profile = await getProfilePreferablyAsArrayBuffer();
-          dispatch({ type: 'PROFILER_CAPTURED' });
-          browser.tabs.sendMessage(tab.id, {
-            type: 'ProfilerConnectToPage',
-            payload: profile,
+          dispatch({
+            type: 'PROFILER_CAPTURE',
+            status: 'done',
+            data: profile,
           });
-        }
+        },
+        error => console.error(error)
       );
-    } catch (e) {
-      console.error(e);
-      // TODO data URL doesn't seem to be working. Permissions issue?
-      // await browser.tabs.update(tab.id, { url: `data:text/html,${encodeURIComponent(e.toString)}` });
-    }
 
     try {
-      dispatch({ type: 'PROFILER_RESUMING' });
+      dispatch({ type: 'PROFILER_RESUME', status: 'start' });
       await browser.geckoProfiler.resume();
-      dispatch({ type: 'PROFILER_RESUMED' });
+      dispatch({ type: 'PROFILER_RESUME', status: 'done' });
     } catch (e) {
       console.error(e);
     }
@@ -98,6 +94,25 @@ export function restart() {
     if (wasRunning) {
       await dispatch(start());
     }
+  };
+}
+
+export function symbols(debugName, breakpadId) {
+  return async dispatch => {
+    dispatch({
+      type: 'SYMBOLS',
+      status: 'start',
+      data: { debugName, breakpadId },
+    });
+    const [addresses, index, buffer] = await browser.geckoProfiler.getSymbols(
+      debugName,
+      breakpadId
+    );
+    dispatch({
+      type: 'SYMBOLS',
+      status: 'done',
+      data: { addresses, index, buffer },
+    });
   };
 }
 

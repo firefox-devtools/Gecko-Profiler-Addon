@@ -20,7 +20,7 @@
       "all_frames": false,
       "js": ["content.js"],
       "matches": ["https://perf-html.io/*"],
-      "run_at": "document_start"
+      "run_at": "document_idle"
     }
   ],
   "applications": {
