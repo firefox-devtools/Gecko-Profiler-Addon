@@ -48,5 +48,11 @@
   ],
   "optional_permissions": [
     "<all_urls>"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://perf-html.io/"],
+      "js": ["content-home.js"]
+    }
   ]
 }
