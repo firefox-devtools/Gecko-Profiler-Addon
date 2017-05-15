@@ -2,6 +2,8 @@
 
 const DEFAULT_VIEWER_URL = 'https://perf-html.io';
 
+const tabToConnectionMap = new Map();
+
 function adjustState(newState) {
   // Deep clone the object, since this can be called through popup.html,
   // which can be unloaded thus leaving this object dead.
@@ -44,18 +46,12 @@ function makeProfileAvailableToTab(profile, port) {
 }
 
 async function createAndWaitForTab(url) {
-  const listenForConnectPromise = listenOnceForConnect('ProfilerPage');
-
   const tabPromise = browser.tabs.create({
     active: true,
     url,
   });
 
-  const tab = await tabPromise;
-  await browser.tabs.executeScript(tab.id, { file: 'content.js' });
-
-  const port = await listenForConnectPromise;
-  return { tab, port };
+  return tabPromise;
 }
 
 async function listenOnceForConnect(name) {
@@ -90,11 +86,22 @@ async function captureProfile() {
   const tabOpenPromise = createAndWaitForTab(profileViewerURL + '/from-addon');
 
   try {
-    const [profile, { port }] = await Promise.all([
-      profilePromise,
-      tabOpenPromise,
-    ]);
-    makeProfileAvailableToTab(profile, port);
+    const [profile, tab] = await Promise.all([profilePromise, tabOpenPromise]);
+
+    const connection = tabToConnectionMap.get(tab.id);
+
+    if (connection) {
+      // If, for instance, it takes a long time to load the profile,
+      // then our onDOMContentLoaded handler and our runtime.onConnect handler
+      // have already connected to the page. All we need to do then is
+      // provide the profile.
+      makeProfileAvailableToTab(profile, connection.port);
+    } else {
+      // If our onDOMContentLoaded handler and our runtime.onConnect handler
+      // haven't connected to the page, set this so that they'll have a
+      // profile they can provide once they do.
+      tabToConnectionMap.set(tab.id, { profile });
+    }
   } catch (e) {
     console.error(e);
     // const { tab } = await tabOpenPromise;
@@ -184,10 +191,34 @@ async function restartProfiler() {
     }
   });
 
-  window.connectDeferred = {};
   browser.runtime.onConnect.addListener(port => {
-    if (window.connectDeferred[port.name]) {
-      window.connectDeferred[port.name].resolve(port);
+    const tabId = port.sender.tab.id;
+    const connection = tabToConnectionMap.get(tabId);
+    if (connection && connection.profile) {
+      makeProfileAvailableToTab(connection.profile, port);
+    } else {
+      tabToConnectionMap.set(tabId, { port });
     }
   });
+
+  browser.tabs.onRemoved.addListener(tabId => {
+    tabToConnectionMap.delete(tabId);
+  });
+
+  browser.webNavigation.onDOMContentLoaded.addListener(
+    async ({ tabId, url }) => {
+      const { profileViewerURL } = await browser.storage.local.get({
+        profileViewerURL: DEFAULT_VIEWER_URL,
+      });
+
+      if (url.startsWith(profileViewerURL)) {
+        const tab = await browser.tabs.get(tabId);
+        browser.tabs.executeScript(tab.id, { file: 'content.js' });
+      } else {
+        // As soon as we navigate away from the profile report, clean
+        // this up so we don't leak it.
+        tabToConnectionMap.delete(tabId);
+      }
+    }
+  );
 })();
