@@ -1,5 +1,3 @@
-import merge from 'lodash.merge';
-
 const initialState = {
   isOpen: false,
   reportUrl: 'https://perf-html.io/from-addon/',
@@ -16,11 +14,13 @@ const initialState = {
 export default function(state = initialState, action) {
   switch (action.type) {
     case 'UPDATE_SETTINGS':
-      // becuse we use a nested { features: {} } we need a deep merge
-      // you could flatten this state out if you wanted to drop the lodash dep
-      return merge({}, state, action.data);
+      return {
+        ...state,
+        ...action.data,
+        features: { ...state.features, ...action.data.features },
+      };
     case 'TOGGLE_SETTINGS':
-      return Object.assign({}, state, { isOpen: !state.isOpen });
+      return { ...state, isOpen: !state.isOpen };
     default:
       return state;
   }

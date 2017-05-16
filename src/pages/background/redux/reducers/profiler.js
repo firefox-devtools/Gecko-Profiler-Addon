@@ -1,5 +1,7 @@
+import { unique } from '../../../../utils/symbol';
+
 const initialState = {
-  symbols: null,
+  symbols: new Map(),
   profile: null,
   isRunning: false,
 };
@@ -7,15 +9,18 @@ const initialState = {
 export default function(state = initialState, action) {
   switch (action.type) {
     case 'IS_RUNNING':
-      return Object.assign({}, state, { isRunning: action.data });
+      return { ...state, isRunning: action.data };
     case 'PROFILER_CAPTURE':
       if (action.status === 'done') {
-        return Object.assign({}, state, { profile: action.data });
+        return { ...state, profile: action.data };
       }
       return state;
     case 'SYMBOLS':
       if (action.status === 'done') {
-        return Object.assign({}, state, { symbols: action.data });
+        const { debugName, breakpadId, addresses, index, buffer } = action.data;
+        const symbols = new Map(state.symbols);
+        symbols.set(unique(debugName, breakpadId), [addresses, index, buffer]);
+        return { ...state, symbols };
       }
       return state;
     default:

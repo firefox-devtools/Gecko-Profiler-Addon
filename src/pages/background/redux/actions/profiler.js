@@ -90,14 +90,18 @@ export function restart() {
   return async (dispatch, getState) => {
     const wasRunning = getState().profiler.isRunning;
 
-    await dispatch(stop());
+    // only stop the profiler if it is running
+    if (getState().profiler.isRunning) {
+      await dispatch(stop());
+    }
+    // only start the profiler if it was running and we stopped it
     if (wasRunning) {
       await dispatch(start());
     }
   };
 }
 
-export function symbols(debugName, breakpadId) {
+export function symbols({ debugName, breakpadId }) {
   return async dispatch => {
     dispatch({
       type: 'SYMBOLS',
@@ -111,7 +115,7 @@ export function symbols(debugName, breakpadId) {
     dispatch({
       type: 'SYMBOLS',
       status: 'done',
-      data: { addresses, index, buffer },
+      data: { debugName, breakpadId, addresses, index, buffer },
     });
   };
 }

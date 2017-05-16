@@ -3,6 +3,8 @@ import { createUIStore } from 'redux-webext';
 
 import * as actions from './actions';
 
+import { unique } from '../../utils/symbol';
+
 function promise(cb, unsafeWindow = window.wrappedJSObject) {
   return new unsafeWindow.Promise(
     exportFunction((resolve, reject) => {
@@ -17,7 +19,6 @@ function promise(cb, unsafeWindow = window.wrappedJSObject) {
 
 (async () => {
   const store = await createUIStore();
-  console.log('INIT STORE', store, store.getState());
 
   if (store) {
     const unsafeWindow = window.wrappedJSObject;
@@ -30,7 +31,14 @@ function promise(cb, unsafeWindow = window.wrappedJSObject) {
       getSymbolTable: (debugName, breakpadId) => {
         return promise(async resolve => {
           await store.dispatch(actions.symbols(debugName, breakpadId));
-          resolve(cloneInto(store.getState().profiler.symbols, window));
+          resolve(
+            cloneInto(
+              store
+                .getState()
+                .profiler.symbols.get(unique(debugName, breakpadId)),
+              window
+            )
+          );
         });
       },
     };
