@@ -1,4 +1,4 @@
-export function update({ data = {} }) {
+export function update(data = {}) {
   return {
     type: 'UPDATE_SETTINGS',
     data,

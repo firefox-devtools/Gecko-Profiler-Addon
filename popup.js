@@ -5912,16 +5912,15 @@ object-assign
       return { type: 'TOGGLE_SETTINGS' };
     }
     function s() {
-      return {
-        type: 'UPDATE_SETTINGS',
-        data: arguments.length > 0 && void 0 !== arguments[0]
-          ? arguments[0]
-          : {},
-      };
+      var e = arguments.length > 0 && void 0 !== arguments[0]
+        ? arguments[0]
+        : {};
+      return l()({ type: 'UPDATE_SETTINGS' }, e);
     }
     Object.defineProperty(t, '__esModule', {
       value: !0,
     }), (t.start = r), (t.stop = o), (t.restart = i), (t.capture = a), (t.toggle = u), (t.update = s);
+    var c = n(327), l = n.n(c);
   },
   function(e, t, n) {
     'use strict';
@@ -11552,7 +11551,24 @@ object-assign
       p = ':';
     e.exports = i;
   },
-  ,
+  function(e, t, n) {
+    'use strict';
+    t.__esModule = !0;
+    var r = n(358),
+      o = (function(e) {
+        return e && e.__esModule ? e : { default: e };
+      })(r);
+    t.default =
+      o.default ||
+      function(e) {
+        for (var t = 1; t < arguments.length; t++) {
+          var n = arguments[t];
+          for (var r in n)
+            Object.prototype.hasOwnProperty.call(n, r) && (e[r] = n[r]);
+        }
+        return e;
+      };
+  },
   ,
   ,
   ,
@@ -12280,7 +12296,9 @@ object-assign
   function(e, t, n) {
     e.exports = { default: n(366), __esModule: !0 };
   },
-  ,
+  function(e, t, n) {
+    e.exports = { default: n(367), __esModule: !0 };
+  },
   ,
   ,
   ,
@@ -12291,6 +12309,9 @@ object-assign
   function(e, t, n) {
     n(382), (e.exports = n(5).Number.isFinite);
   },
+  function(e, t, n) {
+    n(383), (e.exports = n(5).Object.assign);
+  },
   ,
   ,
   ,
@@ -12300,8 +12321,41 @@ object-assign
   ,
   ,
   ,
-  ,
-  ,
+  function(e, t, n) {
+    'use strict';
+    var r = n(35),
+      o = n(107),
+      i = n(75),
+      a = n(43),
+      u = n(72),
+      s = Object.assign;
+    e.exports = !s ||
+      n(22)(function() {
+        var e = {}, t = {}, n = Symbol(), r = 'abcdefghijklmnopqrst';
+        return (e[n] = 7), r.split('').forEach(function(e) {
+          t[e] = e;
+        }), 7 != s({}, e)[n] || Object.keys(s({}, t)).join('') != r;
+      })
+      ? function(e, t) {
+          for (
+            var n = a(e), s = arguments.length, c = 1, l = o.f, p = i.f;
+            s > c;
+
+          )
+            for (
+              var f,
+                d = u(arguments[c++]),
+                h = l ? r(d).concat(l(d)) : r(d),
+                v = h.length,
+                m = 0;
+              v > m;
+
+            )
+              p.call(d, (f = h[m++])) && (n[f] = d[f]);
+          return n;
+        }
+      : s;
+  },
   ,
   ,
   ,
@@ -12313,5 +12367,9 @@ object-assign
         return 'number' == typeof e && o(e);
       },
     });
+  },
+  function(e, t, n) {
+    var r = n(13);
+    r(r.S + r.F, 'Object', { assign: n(377) });
   },
 ]);

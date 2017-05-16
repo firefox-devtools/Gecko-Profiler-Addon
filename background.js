@@ -2535,9 +2535,13 @@
   },
   function(t, e, r) {
     'use strict';
-    function n(t) {
-      var e = t.data;
-      return { type: 'UPDATE_SETTINGS', data: void 0 === e ? {} : e };
+    function n() {
+      return {
+        type: 'UPDATE_SETTINGS',
+        data: arguments.length > 0 && void 0 !== arguments[0]
+          ? arguments[0]
+          : {},
+      };
     }
     function o() {
       return { type: 'TOGGLE_SETTINGS' };
