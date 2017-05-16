@@ -43,6 +43,7 @@
   },
   "permissions": [
     "geckoProfiler",
+    "webNavigation",
     "storage",
     "https://perf-html.io/*"
   ],
