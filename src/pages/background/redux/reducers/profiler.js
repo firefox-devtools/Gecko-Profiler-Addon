@@ -1,7 +1,7 @@
 import { unique } from '../../../../utils/symbol';
 
 const initialState = {
-  symbols: new Map(),
+  symbols: {},
   profile: null,
   isRunning: false,
 };
@@ -15,12 +15,16 @@ export default function(state = initialState, action) {
         return { ...state, profile: action.data };
       }
       return state;
-    case 'SYMBOLS':
+    case 'GET_SYMBOLS':
       if (action.status === 'done') {
         const { debugName, breakpadId, addresses, index, buffer } = action.data;
-        const symbols = new Map(state.symbols);
-        symbols.set(unique(debugName, breakpadId), [addresses, index, buffer]);
-        return { ...state, symbols };
+        return {
+          ...state,
+          symbols: {
+            ...state.symbols,
+            [unique(debugName, breakpadId)]: [addresses, index, buffer],
+          },
+        };
       }
       return state;
     default:

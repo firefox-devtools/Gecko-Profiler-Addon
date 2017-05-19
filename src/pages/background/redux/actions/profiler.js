@@ -101,10 +101,10 @@ export function restart() {
   };
 }
 
-export function symbols({ debugName, breakpadId }) {
+export function getSymbols({ debugName, breakpadId }) {
   return async dispatch => {
     dispatch({
-      type: 'SYMBOLS',
+      type: 'GET_SYMBOLS',
       status: 'start',
       data: { debugName, breakpadId },
     });
@@ -113,7 +113,7 @@ export function symbols({ debugName, breakpadId }) {
       breakpadId
     );
     dispatch({
-      type: 'SYMBOLS',
+      type: 'GET_SYMBOLS',
       status: 'done',
       data: { debugName, breakpadId, addresses, index, buffer },
     });

@@ -1,6 +1,6 @@
-export function symbols(debugName, breakpadId) {
+export function getSymbols(debugName, breakpadId) {
   return {
-    type: 'GET_SYMBOL_TABLE',
+    type: 'GET_SYMBOLS',
     debugName,
     breakpadId,
   };

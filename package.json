@@ -30,7 +30,7 @@
   },
   "scripts": {
     "start": "web-ext run --firefox=$npm_package_config_firefox",
-    "dev": "webpack -p --progress --colors --watch",
+    "dev": "webpack --progress --colors --watch",
     "build": "web-ext build -i README.md package.json *.rdf transition resources",
     "storybook": "start-storybook -s . -p 9001 -c .storybook",
     "prettier": "prettier --single-quote --trailing-comma es5 --write \"./!(node_modules)**/*.js\" \"./src/**/*.js\" *.js",

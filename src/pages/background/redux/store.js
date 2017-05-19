@@ -9,7 +9,7 @@ import {
   stop,
   capture,
   restart,
-  symbols,
+  getSymbols,
 } from './actions/profiler';
 import { update, toggle as toggleSettings } from './actions/settings';
 
@@ -27,7 +27,7 @@ export default createBackgroundStore({
     ['RESTART_PROFILER']: restart,
     ['UPDATE_SETTINGS']: update,
     ['TOGGLE_SETTINGS']: toggleSettings,
-    ['GET_SYMBOL_TABLE']: symbols,
+    ['GET_SYMBOLS']: getSymbols,
   },
   onDisconnect() {},
 });

@@ -1,10 +1,11 @@
 /* global cloneInto, exportFunction  */
 import { createUIStore } from 'redux-webext';
 
-import * as actions from './actions';
+import { getSymbols } from './actions';
 
 import { unique } from '../../utils/symbol';
 
+// utility to convert promises to local "page" promises instead of content
 function promise(cb, unsafeWindow = window.wrappedJSObject) {
   return new unsafeWindow.Promise(
     exportFunction((resolve, reject) => {
@@ -19,29 +20,33 @@ function promise(cb, unsafeWindow = window.wrappedJSObject) {
 
 (async () => {
   const store = await createUIStore();
+  const unsafeWindow = window.wrappedJSObject;
 
   if (store) {
-    const unsafeWindow = window.wrappedJSObject;
     const connect = {
       getProfile: () => {
         return promise(resolve => {
-          resolve(cloneInto(store.getState().profiler.profile, window));
+          resolve(cloneInto(store.getState().profiler.profile, unsafeWindow));
         });
       },
       getSymbolTable: (debugName, breakpadId) => {
-        return promise(async resolve => {
-          await store.dispatch(actions.symbols(debugName, breakpadId));
-          resolve(
-            cloneInto(
-              store
-                .getState()
-                .profiler.symbols.get(unique(debugName, breakpadId)),
-              window
-            )
-          );
-        });
+        return promise(resolve => {
+          // subscribe to changes in the store until our symbol arrives so we
+          // can resolve the promise and unsubscribe from changes
+          const unsubscribe = store.subscribe(() => {
+            const symbol = store.getState().profiler.symbols[
+              unique(debugName, breakpadId)
+            ];
+            if (symbol) {
+              unsubscribe();
+              resolve(cloneInto(symbol, unsafeWindow));
+            }
+          });
+          store.dispatch(getSymbols(debugName, breakpadId));
+        }, unsafeWindow);
       },
     };
+
     if (unsafeWindow.connectToGeckoProfiler) {
       unsafeWindow.connectToGeckoProfiler(
         cloneInto(connect, unsafeWindow, { cloneFunctions: true })
@@ -52,14 +57,7 @@ function promise(cb, unsafeWindow = window.wrappedJSObject) {
         unsafeWindow.connectToGeckoProfiler
       );
     }
-
-    unsafeWindow.profile = cloneInto(
-      store.getState().profiler.profile,
-      unsafeWindow
-    );
-    // window.wrappedJSObject.symbols = cloneInto(
-    //   store.getState().profiler.symbols,
-    //   window
-    // );
+  } else {
+    console.error('unable to connect this page to the extension');
   }
 })();
