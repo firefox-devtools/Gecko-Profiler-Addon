@@ -8,6 +8,8 @@ const initialState = {
     js: true,
     stackwalk: true,
     tasktracer: false,
+    leaf: true,
+    threads: true,
   },
 };
 
@@ -17,7 +19,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         ...action.data,
-        features: { ...state.features, ...action.data.features },
+        features: {
+          ...state.features,
+          ...action.data.features,
+          threads: action.data.threads.split(',').length > 0,
+        },
       };
     case 'TOGGLE_SETTINGS':
       return { ...state, isOpen: !state.isOpen };

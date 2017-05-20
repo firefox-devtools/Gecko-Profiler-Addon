@@ -11,19 +11,13 @@ export function toggle() {
 export function start() {
   return async (dispatch, getState) => {
     const { settings } = getState();
-    const threads = settings.threads.split(',');
-    const enabledFeatures = Object.keys(settings.features).filter(
-      f => settings.features[f]
-    );
-    enabledFeatures.push('leaf');
-    if (threads.length > 0) {
-      enabledFeatures.push('threads');
-    }
     const options = {
       bufferSize: settings.buffersize,
       interval: settings.interval,
-      features: enabledFeatures,
-      threads,
+      features: Object.keys(settings.features).filter(
+        f => settings.features[f]
+      ),
+      threads: settings.threads.split(','),
     };
     dispatch({ type: 'PROFILER_START', status: 'start' });
     await browser.geckoProfiler.start(options).catch(() => {});
