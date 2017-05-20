@@ -19,13 +19,34 @@ describe('reducers', () => {
   });
 
   it('should include threads feature when there are threads', () => {
-    const threads = ['this', 'that', 'the', 'other'];
+    const threads = ['this', 'that', 'the', 'other', ''];
     expect(
       reducer({}, { type: 'UPDATE_SETTINGS', data: { threads } })
     ).toEqual({
       threads,
       features: {
         threads: true,
+      },
+    });
+  });
+
+  it('should exclude threads feature when no threads', () => {
+    // at first only one thread, then none
+    const threads = ['one'];
+    expect(
+      reducer({}, { type: 'UPDATE_SETTINGS', data: { threads } })
+    ).toEqual({
+      threads,
+      features: {
+        threads: true,
+      },
+    });
+    expect(
+      reducer({}, { type: 'UPDATE_SETTINGS', data: { threads: [] } })
+    ).toEqual({
+      threads: [],
+      features: {
+        threads: false,
       },
     });
   });
