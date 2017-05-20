@@ -43,7 +43,8 @@ class Settings extends PureComponent {
   handleThreadsChange(e) {
     e.preventDefault();
     const { update } = this.props;
-    update({ threads: e.target.value });
+    // no spaces are allowed
+    update({ threads: e.target.value.split(',').map(v => v.trim()) });
   }
 
   render() {
@@ -82,7 +83,7 @@ class Settings extends PureComponent {
                 type="text"
                 className="settings-textbox threads-textbox"
                 title="Comma-separated list of case-insensitive substring filters for the thread name"
-                value={settings.threads}
+                value={settings.threads.join(',')}
                 onChange={this.handleThreadsChange}
               />
             </div>

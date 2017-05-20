@@ -10,14 +10,14 @@ export function toggle() {
 
 export function start() {
   return async (dispatch, getState) => {
-    const { settings } = getState();
+    const {
+      settings: { buffersize, interval, features, threads },
+    } = getState();
     const options = {
-      bufferSize: settings.buffersize,
-      interval: settings.interval,
-      features: Object.keys(settings.features).filter(
-        f => settings.features[f]
-      ),
-      threads: settings.threads.split(','),
+      buffersize,
+      interval,
+      features: Object.keys(features).filter(f => features[f]),
+      threads: threads,
     };
     dispatch({ type: 'PROFILER_START', status: 'start' });
     await browser.geckoProfiler.start(options).catch(() => {});

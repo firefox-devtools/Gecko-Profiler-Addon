@@ -7,7 +7,7 @@ describe('reducers', () => {
       reportUrl: 'https://perf-html.io/from-addon/',
       buffersize: 1000000,
       interval: 1,
-      threads: 'GeckoMain,Compositor',
+      threads: ['GeckoMain', 'Compositor'],
       features: {
         js: true,
         stackwalk: true,
@@ -19,7 +19,7 @@ describe('reducers', () => {
   });
 
   it('should include threads feature when there are threads', () => {
-    const threads = 'this,that,the,other';
+    const threads = ['this', 'that', 'the', 'other'];
     expect(
       reducer({}, { type: 'UPDATE_SETTINGS', data: { threads } })
     ).toEqual({
