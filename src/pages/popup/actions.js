@@ -31,6 +31,6 @@ export function toggle() {
 export function update(data = {}) {
   return {
     type: 'UPDATE_SETTINGS',
-    data,
+    ...data,
   };
 }
