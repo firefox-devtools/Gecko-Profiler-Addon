@@ -1,4 +1,6 @@
+import store from '../src/pages/background/redux/store';
 import reducer from '../src/pages/background/redux/reducers/settings';
+import * as actions from '../src/pages/background/redux/actions/settings';
 
 describe('reducers', () => {
   it('should return the initial state', () => {
@@ -48,6 +50,33 @@ describe('reducers', () => {
       features: {
         threads: false,
       },
+    });
+  });
+});
+
+describe('actions', () => {
+  it('should not save when state is not updated', () => {
+    store.dispatch({ type: 'DO_OTHER_THINGS' });
+    expect(browser.storage.local.set).toHaveBeenCalledTimes(0);
+  });
+
+  it('should save the updated state', () => {
+    const initial = store.getState().settings;
+    const threads = ['fa', 'la', 'la', 'la', 'la'];
+    const state = { ...initial, threads };
+    store.dispatch(actions.update({ threads }));
+    expect(browser.storage.local.set).toHaveBeenLastCalledWith({
+      profilerState: state,
+    });
+  });
+
+  it('should save when the settings are toggled', () => {
+    const initial = store.getState().settings;
+    const isOpen = true;
+    const state = { ...initial, isOpen };
+    store.dispatch(actions.toggle());
+    expect(browser.storage.local.set).toHaveBeenLastCalledWith({
+      profilerState: state,
     });
   });
 });

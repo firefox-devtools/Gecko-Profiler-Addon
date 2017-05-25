@@ -63,5 +63,10 @@
     "redux-subscriber": "^1.1.0",
     "redux-thunk": "^2.2.0",
     "redux-webext": "^1.1.2"
+  },
+  "jest": {
+    "setupFiles": [
+      "jest-webextension-mock"
+    ]
   }
 }

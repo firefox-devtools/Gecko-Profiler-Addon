@@ -1,12 +1,13 @@
 import thunk from 'redux-thunk';
+import storage from './browser.storage.local';
 
 const middlewares = [thunk];
 
-/* eslint-disable global-require */
-if (true) {
+if (process.env.NODE_ENV === 'development') {
   const { createLogger } = require('redux-logger');
   middlewares.push(createLogger({ collapsed: true }));
 }
-/* eslint-enable global-require */
+
+middlewares.push(storage);
 
 export default middlewares;
