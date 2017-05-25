@@ -1,4 +1,4 @@
-export const SETTINGS_KEY = 'profilerState';
+import { SETTINGS_KEY } from '../../storage';
 
 export default ({ getState }) => next => action => {
   const result = next(action);
