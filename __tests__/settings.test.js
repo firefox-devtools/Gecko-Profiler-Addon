@@ -1,6 +1,9 @@
 import store from '../src/pages/background/redux/store';
 import reducer from '../src/pages/background/redux/reducers/settings';
 import * as actions from '../src/pages/background/redux/actions/settings';
+import {
+  SETTINGS_KEY,
+} from '../src/pages/background/redux/middlewares/browser.storage';
 
 describe('reducers', () => {
   it('should return the initial state', () => {
@@ -54,10 +57,20 @@ describe('reducers', () => {
   });
 });
 
+describe('init', () => {
+  it('should initialize with the local storage', () => {
+    // init
+    expect(browser.storage.local.get).toHaveBeenCalledTimes(1);
+    expect(browser.storage.local.get).toHaveBeenCalledWith(SETTINGS_KEY);
+    // then the middleware will set it again
+    expect(browser.storage.local.set).toHaveBeenCalledTimes(1);
+  });
+});
+
 describe('actions', () => {
   it('should not save when state is not updated', () => {
     store.dispatch({ type: 'DO_OTHER_THINGS' });
-    expect(browser.storage.local.set).toHaveBeenCalledTimes(0);
+    expect(browser.storage.local.set).toHaveBeenCalledTimes(1);
   });
 
   it('should save the updated state', () => {

@@ -1,5 +1,5 @@
 import thunk from 'redux-thunk';
-import storage from './browser.storage.local';
+import storage from './browser.storage';
 
 const middlewares = [thunk];
 

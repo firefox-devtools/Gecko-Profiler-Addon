@@ -2,6 +2,7 @@ import { createStore, applyMiddleware } from 'redux';
 import { createBackgroundStore } from 'redux-webext';
 import initSubscriber from 'redux-subscriber';
 import middlewares from './middlewares';
+import { SETTINGS_KEY } from './middlewares/browser.storage';
 import reducers from './reducers';
 import {
   toggle as toggleProfiler,
@@ -16,6 +17,11 @@ import { update, toggle as toggleSettings } from './actions/settings';
 const store = createStore(reducers, applyMiddleware(...middlewares));
 
 initSubscriber(store);
+
+(async function init() {
+  const settings = await browser.storage.local.get(SETTINGS_KEY);
+  store.dispatch(update(settings));
+})();
 
 export default createBackgroundStore({
   store,
