@@ -65,6 +65,9 @@
     "redux-webext": "^1.1.2"
   },
   "jest": {
+    "bail": true,
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true,
     "setupFiles": [
       "jest-webextension-mock"
     ]
