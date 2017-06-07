@@ -57,18 +57,16 @@ export function capture() {
         active: true,
         url: getState().settings.reportUrl,
       })
-      .then(
-        async () => {
-          dispatch({ type: 'PROFILER_CAPTURE', status: 'start' });
-          const profile = await getProfilePreferablyAsArrayBuffer();
-          dispatch({
-            type: 'PROFILER_CAPTURE',
-            status: 'done',
-            data: profile,
-          });
-        },
-        error => console.error(error)
-      );
+      .then(async () => {
+        dispatch({ type: 'PROFILER_CAPTURE', status: 'start' });
+        const profile = await getProfilePreferablyAsArrayBuffer();
+        dispatch({
+          type: 'PROFILER_CAPTURE',
+          status: 'done',
+          data: profile,
+        });
+      })
+      .catch(e => console.error(e));
 
     try {
       dispatch({ type: 'PROFILER_RESUME', status: 'start' });
