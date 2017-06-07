@@ -1,5 +1,4 @@
 import store from '../src/pages/background/redux/store';
-import * as actions from '../src/pages/background/redux/actions/profiler';
 import init, {
   TOGGLE_PROFILE_COMMAND,
   CAPTURE_PROFILE_COMMAND,
