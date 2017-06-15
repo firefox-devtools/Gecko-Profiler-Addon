@@ -78,6 +78,16 @@ If you want to work on only the UI components for updating the CSS/HTML of the p
 $ npm run storybook
 ```
 
+## Tests
+
+Test are run using the Jest framework.  All test files are located in the [`__tests__`](./__tests__) directory. Test coverage is turned on by default and should output current coverage in your console.
+
+```bash
+$ npm test
+```
+
+We use the `jest-webextension-mock` module to mock the WebExtension APIs, the goal of these unit tests is to know that a certain intended action actually triggers the API calls we hope for. 
+
 ## Known issues
 
  - Does not support getting profiles from Firefox for Android.
