@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reducers.profiler should maintain a consistent default state 1`] = `
+Object {
+  "isRunning": false,
+  "profile": null,
+  "symbols": Object {},
+}
+`;
