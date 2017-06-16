@@ -183,6 +183,33 @@ describe('actions.profiler', () => {
       browser.geckoProfiler.getProfileAsArrayBuffer = jest.fn();
       browser.geckoProfiler.getProfile = jest.fn();
     });
+
+    it('should console error if browser.tabs.create throws', async () => {
+      global.console = { error: jest.fn() };
+      const e = new Error('millenials are lazy');
+      browser.tabs.create = jest.fn(() => {
+        return new Promise(function() {
+          throw e;
+        });
+      });
+      const state = reducer(undefined, {});
+      const store = mockStore(state);
+      const expectedActions = [
+        { type: 'PROFILER_PAUSE', status: 'start' },
+        { type: 'PROFILER_PAUSE', status: 'done' },
+        { type: 'PROFILER_RESUME', status: 'start' },
+        { type: 'PROFILER_RESUME', status: 'done' },
+      ];
+
+      await store.dispatch(actions.capture());
+      expect(global.console.error).toBeCalledWith(e);
+      expect(browser.geckoProfiler.pause).toHaveBeenCalled();
+      expect(browser.tabs.create).toHaveBeenCalled();
+      expect(browser.geckoProfiler.resume).toHaveBeenCalled();
+      expect(store.getActions()).toEqual(expectedActions);
+      // reset mocks
+      browser.tabs.create = jest.fn();
+    });
   });
 
   describe('restart', () => {
