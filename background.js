@@ -71,7 +71,7 @@
   /******/
   /******/ /******/ __webpack_require__.p = ''; // Load entry module and return exports
   /******/
-  /******/ /******/ return __webpack_require__((__webpack_require__.s = 354));
+  /******/ /******/ return __webpack_require__((__webpack_require__.s = 353));
   /******/
 })(
   /************************************************************************/
@@ -4632,11 +4632,11 @@
                                     );
                                   }
                                 )
-                              ),
-                              function(error) {
-                                return console.error(error);
-                              }
-                            );
+                              )
+                            )
+                            .catch(function(e) {
+                              return console.error(e);
+                            });
 
                           _context5.prev = 5;
 
@@ -5139,39 +5139,79 @@
     ,
     /* 229 */ /***/ function(module, __webpack_exports__, __webpack_require__) {
       'use strict';
-      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_defineProperty__ = __webpack_require__(
-        100
+      /* harmony export (binding) */ __webpack_require__.d(
+        __webpack_exports__,
+        'b',
+        function() {
+          return SETTINGS_KEY;
+        }
       );
-      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_defineProperty___default = __webpack_require__.n(
-        __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_defineProperty__
+      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(
+        44
       );
-      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__storage__ = __webpack_require__(
-        350
+      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default = __webpack_require__.n(
+        __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__
+      );
+      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(
+        43
+      );
+      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(
+        __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_asyncToGenerator__
+      );
+      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__redux_store__ = __webpack_require__(
+        207
+      );
+      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__redux_actions_settings__ = __webpack_require__(
+        206
       );
 
-      /* harmony default export */ __webpack_exports__['a'] = function(_ref) {
-        var getState = _ref.getState;
-        return function(next) {
-          return function(action) {
-            var result = next(action);
-            if (
-              action.type === 'UPDATE_SETTINGS' ||
-              action.type === 'TOGGLE_SETTINGS'
-            ) {
-              browser.storage.local.set(
-                __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_defineProperty___default()(
-                  {},
-                  __WEBPACK_IMPORTED_MODULE_1__storage__[
-                    'b' /* SETTINGS_KEY */
-                  ],
-                  getState().settings
-                )
+      var SETTINGS_KEY = 'profilerState';
+
+      /* harmony default export */ __webpack_exports__['a'] = (function() {
+        var _ref = __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_asyncToGenerator___default()(
+          __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(
+            function _callee() {
+              var state;
+              return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(
+                function _callee$(_context) {
+                  while (1) {
+                    switch ((_context.prev = _context.next)) {
+                      case 0:
+                        _context.next = 2;
+                        return browser.storage.local.get(SETTINGS_KEY);
+
+                      case 2:
+                        state = _context.sent;
+
+                        __WEBPACK_IMPORTED_MODULE_2__redux_store__[
+                          'a' /* default */
+                        ].dispatch(
+                          __webpack_require__.i(
+                            __WEBPACK_IMPORTED_MODULE_3__redux_actions_settings__[
+                              'a' /* update */
+                            ]
+                          )(state[SETTINGS_KEY])
+                        );
+
+                      case 4:
+                      case 'end':
+                        return _context.stop();
+                    }
+                  }
+                },
+                _callee,
+                this
               );
             }
-            return result;
-          };
-        };
-      };
+          )
+        );
+
+        function init() {
+          return _ref.apply(this, arguments);
+        }
+
+        return init;
+      })();
 
       /***/
     },
@@ -5295,6 +5335,8 @@
     /* 348 */
     /***/ function(module, __webpack_exports__, __webpack_require__) {
       'use strict';
+      /* unused harmony export TOGGLE_PROFILE_COMMAND */
+      /* unused harmony export CAPTURE_PROFILE_COMMAND */
       /* harmony export (immutable) */ __webpack_exports__['a'] = init;
       /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__redux_store__ = __webpack_require__(
         207
@@ -5303,9 +5345,12 @@
         205
       );
 
+      var TOGGLE_PROFILE_COMMAND = 'ToggleProfiler';
+      var CAPTURE_PROFILE_COMMAND = 'CaptureProfile';
+
       function init() {
         browser.commands.onCommand.addListener(function(command) {
-          if (command === 'ToggleProfiler') {
+          if (command === TOGGLE_PROFILE_COMMAND) {
             return __WEBPACK_IMPORTED_MODULE_0__redux_store__[
               'a' /* default */
             ].dispatch(
@@ -5315,7 +5360,7 @@
                 ]
               )()
             );
-          } else if (command === 'CaptureProfile') {
+          } else if (command === CAPTURE_PROFILE_COMMAND) {
             return __WEBPACK_IMPORTED_MODULE_0__redux_store__[
               'a' /* default */
             ].dispatch(
@@ -5339,7 +5384,7 @@
         207
       );
       /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__redux_actions__ = __webpack_require__(
-        355
+        354
       );
 
       function init() {
@@ -5355,90 +5400,11 @@
       }
 
       /***/
-    },
-    /* 350 */
-    /***/ function(module, __webpack_exports__, __webpack_require__) {
-      'use strict';
-      /* harmony export (binding) */ __webpack_require__.d(
-        __webpack_exports__,
-        'b',
-        function() {
-          return SETTINGS_KEY;
-        }
-      );
-      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(
-        44
-      );
-      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default = __webpack_require__.n(
-        __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__
-      );
-      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(
-        43
-      );
-      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(
-        __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_asyncToGenerator__
-      );
-      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__redux_store__ = __webpack_require__(
-        207
-      );
-      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__redux_actions_settings__ = __webpack_require__(
-        206
-      );
-
-      var SETTINGS_KEY = 'profilerState';
-
-      /* harmony default export */ __webpack_exports__['a'] = (function() {
-        var _ref = __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_asyncToGenerator___default()(
-          __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(
-            function _callee() {
-              var state;
-              return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(
-                function _callee$(_context) {
-                  while (1) {
-                    switch ((_context.prev = _context.next)) {
-                      case 0:
-                        _context.next = 2;
-                        return browser.storage.local.get(SETTINGS_KEY);
-
-                      case 2:
-                        state = _context.sent;
-
-                        __WEBPACK_IMPORTED_MODULE_2__redux_store__[
-                          'a' /* default */
-                        ].dispatch(
-                          __webpack_require__.i(
-                            __WEBPACK_IMPORTED_MODULE_3__redux_actions_settings__[
-                              'a' /* update */
-                            ]
-                          )(state[SETTINGS_KEY])
-                        );
-
-                      case 4:
-                      case 'end':
-                        return _context.stop();
-                    }
-                  }
-                },
-                _callee,
-                this
-              );
-            }
-          )
-        );
-
-        function init() {
-          return _ref.apply(this, arguments);
-        }
-
-        return init;
-      })();
-
-      /***/
-    } /* 354 */ /* 352 */ /* 353 */,
+    } /* 353 */ /* 351 */ /* 352 */,
     ,
     ,
     ,
-    /* 351 */ /***/ function(module, __webpack_exports__, __webpack_require__) {
+    /* 350 */ /***/ function(module, __webpack_exports__, __webpack_require__) {
       'use strict';
       Object.defineProperty(__webpack_exports__, '__esModule', { value: true });
       /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(
@@ -5463,7 +5429,7 @@
         349
       );
       /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__storage__ = __webpack_require__(
-        350
+        344
       );
 
       var init = (function() {
@@ -5518,7 +5484,7 @@
 
       /***/
     },
-    /* 355 */
+    /* 354 */
     /***/ function(module, __webpack_exports__, __webpack_require__) {
       'use strict';
       /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__profiler__ = __webpack_require__(
@@ -5538,6 +5504,45 @@
 
       /***/
     },
+    /* 355 */
+    /***/ function(module, __webpack_exports__, __webpack_require__) {
+      'use strict';
+      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_defineProperty__ = __webpack_require__(
+        100
+      );
+      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_defineProperty___default = __webpack_require__.n(
+        __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_defineProperty__
+      );
+      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__storage__ = __webpack_require__(
+        344
+      );
+
+      /* harmony default export */ __webpack_exports__['a'] = function(_ref) {
+        var getState = _ref.getState;
+        return function(next) {
+          return function(action) {
+            var result = next(action);
+            if (
+              action.type === 'UPDATE_SETTINGS' ||
+              action.type === 'TOGGLE_SETTINGS'
+            ) {
+              browser.storage.local.set(
+                __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_defineProperty___default()(
+                  {},
+                  __WEBPACK_IMPORTED_MODULE_1__storage__[
+                    'b' /* SETTINGS_KEY */
+                  ],
+                  getState().settings
+                )
+              );
+            }
+            return result;
+          };
+        };
+      };
+
+      /***/
+    },
     /* 356 */
     /***/ function(module, __webpack_exports__, __webpack_require__) {
       'use strict';
@@ -5548,7 +5553,7 @@
         __WEBPACK_IMPORTED_MODULE_0_redux_thunk__
       );
       /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__browser_storage__ = __webpack_require__(
-        344
+        355
       );
       /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__logger__ = __webpack_require__(
         357

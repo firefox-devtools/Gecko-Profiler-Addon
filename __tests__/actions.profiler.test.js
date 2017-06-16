@@ -86,8 +86,9 @@ describe('actions.profiler', () => {
       const expectedActions = [
         { type: 'PROFILER_PAUSE', status: 'start' },
         { type: 'PROFILER_PAUSE', status: 'done' },
-        { type: 'PROFILER_RESUME', status: 'start' },
         { type: 'PROFILER_CAPTURE', status: 'start' },
+        { type: 'PROFILER_CAPTURE', status: 'done' },
+        { type: 'PROFILER_RESUME', status: 'start' },
         { type: 'PROFILER_RESUME', status: 'done' },
       ];
       return store.dispatch(actions.capture()).then(() => {
@@ -102,32 +103,32 @@ describe('actions.profiler', () => {
     });
 
     // This is intended to test the exception handling within the promises
-    //   it('should console error if getProfileAsArrayBuffer throws', async () => {
-    //     const spy = jest.spyOn(console, 'error');
-    //     const e = new Error('millenials');
-    //     jest
-    //       .spyOn(browser.geckoProfiler, 'getProfileAsArrayBuffer')
-    //       .mockImplementation(() => Promise.reject(e));
-    //     const state = reducer(undefined, {});
-    //     const store = mockStore(state);
-    //     const expectedActions = [
-    //       { status: 'start', type: 'PROFILER_PAUSE' },
-    //       { status: 'done', type: 'PROFILER_PAUSE' },
-    //       { status: 'start', type: 'PROFILER_CAPTURE' },
-    //       { status: 'error', type: 'PROFILER_CAPTURE' },
-    //     ];
-    //
-    //     await store.dispatch(actions.capture());
-    //     expect(spy).toBeCalledWith(e);
-    //     expect(browser.geckoProfiler.pause).toHaveBeenCalled();
-    //     expect(browser.tabs.create).toHaveBeenCalled();
-    //     expect(browser.geckoProfiler.getProfileAsArrayBuffer).toHaveBeenCalled();
-    //     expect(browser.geckoProfiler.resume).toHaveBeenCalled();
-    //     expect(store.getActions()).toEqual(expectedActions);
-    //     spy.mockReset();
-    //     spy.mockRestore();
-    //     browser.geckoProfiler.getProfileAsArrayBuffer.mockRestore();
-    //   });
+    it('should console error if getProfileAsArrayBuffer throws', async () => {
+      global.console = { error: jest.fn() };
+      const e = new Error('millenials are lazy');
+      browser.geckoProfiler.getProfileAsArrayBuffer = jest.fn(() => {
+        throw e;
+      });
+      const state = reducer(undefined, {});
+      const store = mockStore(state);
+      const expectedActions = [
+        { type: 'PROFILER_PAUSE', status: 'start' },
+        { type: 'PROFILER_PAUSE', status: 'done' },
+        { type: 'PROFILER_CAPTURE', status: 'start' },
+        { type: 'PROFILER_CAPTURE', status: 'error', data: e },
+        { type: 'PROFILER_RESUME', status: 'start' },
+        { type: 'PROFILER_RESUME', status: 'done' },
+      ];
+
+      await store.dispatch(actions.capture());
+      expect(global.console.error).toBeCalledWith(e);
+      expect(browser.geckoProfiler.pause).toHaveBeenCalled();
+      expect(browser.tabs.create).toHaveBeenCalled();
+      expect(browser.geckoProfiler.getProfileAsArrayBuffer).toHaveBeenCalled();
+      expect(browser.geckoProfiler.resume).toHaveBeenCalled();
+      expect(store.getActions()).toEqual(expectedActions);
+      browser.geckoProfiler.getProfileAsArrayBuffer = jest.fn();
+    });
   });
 
   describe('restart', () => {

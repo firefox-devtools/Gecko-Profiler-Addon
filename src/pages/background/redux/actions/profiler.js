@@ -37,41 +37,48 @@ function getProfilePreferablyAsArrayBuffer() {
   // This is a compatibility wrapper for Firefox builds from before 1362800
   // landed. We can remove it once Nightly switches to 56.
   if ('getProfileAsArrayBuffer' in browser.geckoProfiler) {
-    return browser.geckoProfiler
-      .getProfileAsArrayBuffer()
-      .catch(e => (console.error(e), {}));
+    return browser.geckoProfiler.getProfileAsArrayBuffer();
   }
-  return browser.geckoProfiler.getProfile().catch(e => (console.error(e), {}));
+  return browser.geckoProfiler.getProfile();
 }
 
 export function capture() {
   return async (dispatch, getState) => {
     // Pause profiler before we collect the profile, so that we don't capture
     // more samples while the parent process waits for subprocess profiles.
-    dispatch({ type: 'PROFILER_PAUSE', status: 'start' });
+    await dispatch({ type: 'PROFILER_PAUSE', status: 'start' });
     await browser.geckoProfiler.pause().catch(() => {});
-    dispatch({ type: 'PROFILER_PAUSE', status: 'done' });
+    await dispatch({ type: 'PROFILER_PAUSE', status: 'done' });
 
-    browser.tabs
+    await browser.tabs
       .create({
         active: true,
         url: getState().settings.reportUrl,
       })
       .then(async () => {
-        dispatch({ type: 'PROFILER_CAPTURE', status: 'start' });
-        const profile = await getProfilePreferablyAsArrayBuffer();
-        dispatch({
-          type: 'PROFILER_CAPTURE',
-          status: 'done',
-          data: profile,
-        });
+        await dispatch({ type: 'PROFILER_CAPTURE', status: 'start' });
+        try {
+          const profile = await getProfilePreferablyAsArrayBuffer();
+          await dispatch({
+            type: 'PROFILER_CAPTURE',
+            status: 'done',
+            data: profile,
+          });
+        } catch (e) {
+          await dispatch({
+            type: 'PROFILER_CAPTURE',
+            status: 'error',
+            data: e,
+          });
+          console.error(e);
+        }
       })
       .catch(e => console.error(e));
 
     try {
-      dispatch({ type: 'PROFILER_RESUME', status: 'start' });
+      await dispatch({ type: 'PROFILER_RESUME', status: 'start' });
       await browser.geckoProfiler.resume();
-      dispatch({ type: 'PROFILER_RESUME', status: 'done' });
+      await dispatch({ type: 'PROFILER_RESUME', status: 'done' });
     } catch (e) {
       console.error(e);
     }
