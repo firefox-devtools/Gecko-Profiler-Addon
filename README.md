@@ -24,41 +24,41 @@ If you want to run your own perf-html instance or want profiles to be sent to a 
 
 ## Development
 
-You need to download [Firefox Nightly](https://nightly.mozilla.org) and  somewhat recent versions of node and npm installed.
+You need to download [Firefox Nightly](https://nightly.mozilla.org) and  somewhat recent versions of [node](https://nodejs.org/) and [yarn](http://yarnpkg.com/) installed.
 
 ```bash
 $ git clone https://github.com/devtools-html/Gecko-Profiler-Addon/
 $ cd Gecko-Profiler-Addon/
-$ npm install
+$ yarn install
 ```
 
 First we'll run a new instance of Firefox with the add-on loaded from source.
 
 ```bash
-$ npm start
+$ yarn start
 ```
 
 Now we need to run `webpack` to build our source code modules into the top level background, options, and popup files.
 
 ```bash
 $ # in another terminal tab
-$ npm run dev
+$ yarn run dev
 ```
 
 Now you can edit the code in the [`src`](./src) directory and those changes will be compiled into the top level files which will automatically reload the add-on running in Firefox.
 
-The `npm start` command runs [Firefox Nightly](http://nightly.mozilla.org/) by default. To run other releases of Firefox use the following `npm start` commands.
+The `yarn start` command runs [Firefox Nightly](http://nightly.mozilla.org/) by default. To run other releases of Firefox use the following `yarn start` commands.
 
 #### [Beta Firefox](https://www.mozilla.org/en-US/firefox/channel/desktop/#beta)
 
 ```bash
-npm start --geckoprofiler:firefox=beta
+yarn start --geckoprofiler:firefox=beta
 ```
 
 #### [Release Firefox](https://www.mozilla.org/firefox/)
 
 ```bash
-npm start --geckoprofiler:firefox=firefox
+yarn start --geckoprofiler:firefox=firefox
 ```
 
 #### Release config
@@ -66,8 +66,8 @@ npm start --geckoprofiler:firefox=firefox
 Or you can set the local config to keep the default for the life of your local repository and no longer need to pass the config on the command line.
 
 ```bash
-npm config set geckoprofiler:firefox beta
-npm start
+yarn config set geckoprofiler:firefox beta
+yarn start
 ```
 
 ## UI Only
@@ -75,7 +75,7 @@ npm start
 If you want to work on only the UI components for updating the CSS/HTML of the popup or options pages use storybook. Storybook will "hot reload" all your changes allowing you to develop the pages quickly without running them in the extension.
 
 ```bash
-$ npm run storybook
+$ yarn run storybook
 ```
 
 ## Tests
@@ -83,10 +83,10 @@ $ npm run storybook
 Test are run using the Jest framework.  All test files are located in the [`__tests__`](./__tests__) directory. Test coverage is turned on by default and should output current coverage in your console.
 
 ```bash
-$ npm test
+$ yarn test
 ```
 
-We use the `jest-webextension-mock` module to mock the WebExtension APIs, the goal of these unit tests is to know that a certain intended action actually triggers the API calls we hope for. 
+We use the `jest-webextension-mock` module to mock the WebExtension APIs, the goal of these unit tests is to know that a certain intended action actually triggers the API calls we hope for.
 
 ## Known issues
 
