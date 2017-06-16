@@ -47,7 +47,7 @@ export function capture() {
     // Pause profiler before we collect the profile, so that we don't capture
     // more samples while the parent process waits for subprocess profiles.
     await dispatch({ type: 'PROFILER_PAUSE', status: 'start' });
-    await browser.geckoProfiler.pause().catch(() => {});
+    await browser.geckoProfiler.pause().catch(e => console.error(e));
     await dispatch({ type: 'PROFILER_PAUSE', status: 'done' });
 
     await browser.tabs
@@ -75,13 +75,9 @@ export function capture() {
       })
       .catch(e => console.error(e));
 
-    try {
-      await dispatch({ type: 'PROFILER_RESUME', status: 'start' });
-      await browser.geckoProfiler.resume();
-      await dispatch({ type: 'PROFILER_RESUME', status: 'done' });
-    } catch (e) {
-      console.error(e);
-    }
+    await dispatch({ type: 'PROFILER_RESUME', status: 'start' });
+    await browser.geckoProfiler.resume().catch(e => console.error(e));
+    await dispatch({ type: 'PROFILER_RESUME', status: 'done' });
   };
 }
 
