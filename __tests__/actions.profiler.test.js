@@ -102,7 +102,30 @@ describe('actions.profiler', () => {
       });
     });
 
-    // This is intended to test the exception handling within the promises
+    it('should use getProfile when getProfileAsArrayBuffer does not exist', async () => {
+      delete browser.geckoProfiler.getProfileAsArrayBuffer;
+      const state = reducer(undefined, {});
+      const store = mockStore(state);
+      const expectedActions = [
+        { type: 'PROFILER_PAUSE', status: 'start' },
+        { type: 'PROFILER_PAUSE', status: 'done' },
+        { type: 'PROFILER_CAPTURE', status: 'start' },
+        { type: 'PROFILER_CAPTURE', status: 'done' },
+        { type: 'PROFILER_RESUME', status: 'start' },
+        { type: 'PROFILER_RESUME', status: 'done' },
+      ];
+
+      await store.dispatch(actions.capture());
+      expect(browser.geckoProfiler.pause).toHaveBeenCalled();
+      expect(browser.tabs.create).toHaveBeenCalled();
+      expect('getProfileAsArrayBuffer' in browser.geckoProfiler).toBe(false);
+      expect(browser.geckoProfiler.getProfile).toHaveBeenCalled();
+      expect(browser.geckoProfiler.resume).toHaveBeenCalled();
+      expect(store.getActions()).toEqual(expectedActions);
+      // reset mock
+      browser.geckoProfiler.getProfileAsArrayBuffer = jest.fn();
+    });
+
     it('should console error if getProfileAsArrayBuffer throws', async () => {
       global.console = { error: jest.fn() };
       const e = new Error('millenials are lazy');
@@ -128,6 +151,37 @@ describe('actions.profiler', () => {
       expect(browser.geckoProfiler.resume).toHaveBeenCalled();
       expect(store.getActions()).toEqual(expectedActions);
       browser.geckoProfiler.getProfileAsArrayBuffer = jest.fn();
+    });
+
+    it('should console error if getProfile throws', async () => {
+      global.console = { error: jest.fn() };
+      const e = new Error('millenials are lazy');
+      delete browser.geckoProfiler.getProfileAsArrayBuffer;
+      browser.geckoProfiler.getProfile = jest.fn(() => {
+        throw e;
+      });
+      const state = reducer(undefined, {});
+      const store = mockStore(state);
+      const expectedActions = [
+        { type: 'PROFILER_PAUSE', status: 'start' },
+        { type: 'PROFILER_PAUSE', status: 'done' },
+        { type: 'PROFILER_CAPTURE', status: 'start' },
+        { type: 'PROFILER_CAPTURE', status: 'error', data: e },
+        { type: 'PROFILER_RESUME', status: 'start' },
+        { type: 'PROFILER_RESUME', status: 'done' },
+      ];
+
+      await store.dispatch(actions.capture());
+      expect(global.console.error).toBeCalledWith(e);
+      expect(browser.geckoProfiler.pause).toHaveBeenCalled();
+      expect(browser.tabs.create).toHaveBeenCalled();
+      expect('getProfileAsArrayBuffer' in browser.geckoProfiler).toBe(false);
+      expect(browser.geckoProfiler.getProfile).toHaveBeenCalled();
+      expect(browser.geckoProfiler.resume).toHaveBeenCalled();
+      expect(store.getActions()).toEqual(expectedActions);
+      // reset mocks
+      browser.geckoProfiler.getProfileAsArrayBuffer = jest.fn();
+      browser.geckoProfiler.getProfile = jest.fn();
     });
   });
 
