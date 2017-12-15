@@ -169,9 +169,15 @@ async function restartProfiler() {
 
   browser.geckoProfiler.onRunning.addListener(isRunning => {
     adjustState({ isRunning });
+
+    // With "path: null" we'll get the default icon for the browser action, which
+    // is theme-aware.
+    // The on state does not need to be theme-aware because we want to highlight
+    // the icon in blue regardless of whether a dark or a light theme is in use.
     browser.browserAction.setIcon({
-      path: `icons/toolbar_${isRunning ? 'on' : 'off'}.png`,
+      path: isRunning ? 'icons/toolbar_on.png' : null,
     });
+
     for (const popup of browser.extension.getViews({ type: 'popup' })) {
       popup.renderState(window.profilerState);
     }

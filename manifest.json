@@ -14,7 +14,14 @@
     "browser_style": false,
     "default_popup": "popup.html",
     "default_title": "Gecko Profiler",
-    "default_icon": "icons/toolbar_off.png"
+    "default_icon": "icons/toolbar_off.png",
+    "theme_icons": [
+      {
+        "dark": "icons/toolbar_off.png",
+        "light": "icons/toolbar_off_light.png",
+        "size": 32
+      }
+    ]
   },
   "options_ui": {
     "page": "options.html"
