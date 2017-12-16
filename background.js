@@ -155,7 +155,7 @@ async function restartProfiler() {
     adjustState({
       isRunning: false,
       settingsOpen: false,
-      buffersize: 1000000,
+      buffersize: 10000000, // 90MB
       interval: 1,
       features: {
         js: true,
