@@ -4,6 +4,9 @@ const DEFAULT_VIEWER_URL = 'https://perf-html.io';
 
 const tabToConnectionMap = new Map();
 
+var profilerState;
+var profileViewerURL = DEFAULT_VIEWER_URL;
+
 function adjustState(newState) {
   // Deep clone the object, since this can be called through popup.html,
   // which can be unloaded thus leaving this object dead.
@@ -80,9 +83,6 @@ async function captureProfile() {
     e => (console.error(e), {})
   );
 
-  const { profileViewerURL } = await browser.storage.local.get({
-    profileViewerURL: DEFAULT_VIEWER_URL,
-  });
   const tabOpenPromise = createAndWaitForTab(profileViewerURL + '/from-addon');
 
   try {
@@ -146,9 +146,11 @@ async function restartProfiler() {
 }
 
 (async () => {
-  window.profilerState = (await browser.storage.local.get(
-    'profilerState'
-  )).profilerState;
+  // Assign to global variables:
+  ({ profilerState, profileViewerURL } = await browser.storage.local.get({
+    profilerState: null,
+    profileViewerURL: DEFAULT_VIEWER_URL,
+  }));
 
   if (!window.profilerState) {
     window.profilerState = {};
@@ -183,6 +185,12 @@ async function restartProfiler() {
     }
   });
 
+  browser.storage.onChanged.addListener(changes => {
+    if (changes.profileViewerURL) {
+      profileViewerURL = changes.profileViewerURL.newValue;
+    }
+  });
+
   browser.commands.onCommand.addListener(command => {
     if (command === 'ToggleProfiler') {
       if (window.profilerState.isRunning) {
@@ -213,10 +221,6 @@ async function restartProfiler() {
 
   browser.webNavigation.onDOMContentLoaded.addListener(
     async ({ tabId, url }) => {
-      const { profileViewerURL } = await browser.storage.local.get({
-        profileViewerURL: DEFAULT_VIEWER_URL,
-      });
-
       if (url.startsWith(profileViewerURL)) {
         const tab = await browser.tabs.get(tabId);
         browser.tabs.executeScript(tab.id, { file: 'content.js' });
