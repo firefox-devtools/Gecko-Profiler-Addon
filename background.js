@@ -222,8 +222,7 @@ async function restartProfiler() {
   browser.webNavigation.onDOMContentLoaded.addListener(
     async ({ tabId, url }) => {
       if (url.startsWith(profileViewerURL)) {
-        const tab = await browser.tabs.get(tabId);
-        browser.tabs.executeScript(tab.id, { file: 'content.js' });
+        browser.tabs.executeScript(tabId, { file: 'content.js' });
       } else {
         // As soon as we navigate away from the profile report, clean
         // this up so we don't leak it.
