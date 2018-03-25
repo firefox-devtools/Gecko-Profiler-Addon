@@ -220,7 +220,10 @@ async function restartProfiler() {
   });
 
   browser.webNavigation.onDOMContentLoaded.addListener(
-    async ({ tabId, url }) => {
+    async ({ frameId, tabId, url }) => {
+      if (frameId !== 0) {
+        return;
+      }
       if (url.startsWith(profileViewerURL)) {
         browser.tabs.executeScript(tabId, { file: 'content.js' });
       } else {
