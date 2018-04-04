@@ -116,20 +116,29 @@ async function captureProfile() {
   }
 }
 
-async function startProfiler() {
-  const settings = window.profilerState;
-  const threads = settings.threads.split(',');
-  const enabledFeatures = Object.keys(settings.features).filter(
-    f => settings.features[f]
-  );
+/**
+ * Not all features are supported on every version of Firefox. Get the list of checked
+ * features, add a few defaults, and filter for what is actually supported.
+ */
+function getEnabledFeatures(features, threads) {
+  const enabledFeatures = Object.keys(features).filter(f => features[f]);
   enabledFeatures.push('leaf');
   if (threads.length > 0) {
     enabledFeatures.push('threads');
   }
+  const supportedFeatures = Object.values(
+    browser.geckoProfiler.ProfilerFeature
+  );
+  return enabledFeatures.filter(feature => supportedFeatures.includes(feature));
+}
+
+async function startProfiler() {
+  const settings = window.profilerState;
+  const threads = settings.threads.split(',');
   const options = {
     bufferSize: settings.buffersize,
     interval: settings.interval,
-    features: enabledFeatures,
+    features: getEnabledFeatures(settings.features, threads),
     threads,
   };
   await browser.geckoProfiler.start(options);
@@ -162,6 +171,7 @@ async function restartProfiler() {
       features: {
         js: true,
         stackwalk: true,
+        responsiveness: true,
         tasktracer: false,
       },
       threads: 'GeckoMain,Compositor',

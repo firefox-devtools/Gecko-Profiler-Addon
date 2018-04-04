@@ -36,6 +36,8 @@ function renderControls(state) {
   document.querySelector('.buffersize-range').value =
     buffersizeScale.fromValueToFraction(state.buffersize) * 100;
   document.querySelector('.stackwalk-checkbox').value = state.stackwalk;
+  document.querySelector('.responsiveness-checkbox').value =
+    state.responsiveness;
   document.querySelector('.js-checkbox').value = state.js;
   document.querySelector('.tasktracer-checkbox').value = state.tasktracer;
   document.querySelector('.threads-textbox').value = state.threads;
@@ -88,12 +90,14 @@ function calculateOverhead(state) {
     0.1
   );
   const overheadFromStackwalk = state.stackwalk ? 0.05 : 0;
+  const overheadFromResponsiveness = state.responsiveness ? 0.05 : 0;
   const overheadFromJavaScrpt = state.js ? 0.05 : 0;
   const overheadFromTaskTracer = state.tasktracer ? 0.05 : 0;
   return clamp(
     overheadFromSampling +
       overheadFromBuffersize +
       overheadFromStackwalk +
+      overheadFromResponsiveness +
       overheadFromJavaScrpt +
       overheadFromTaskTracer,
     0,
@@ -117,12 +121,14 @@ function calculateInformation(state) {
     0.3
   );
   const informationFromStackwalk = state.stackwalk ? 0.1 : 0;
+  const informationFromResponsiveness = state.responsiveness ? 0.1 : 0;
   const informationFromJavaScrpt = state.js ? 0.1 : 0;
   const informationFromTaskTracer = state.tasktracer ? 0.1 : 0;
   return clamp(
     informationFromSampling +
       informationFromBuffersize +
       informationFromStackwalk +
+      informationFromResponsiveness +
       informationFromJavaScrpt +
       informationFromTaskTracer,
     0,
@@ -188,36 +194,26 @@ document
     renderState(background.profilerState);
   });
 
-document
-  .querySelector('.stackwalk-checkbox')
-  .addEventListener('change', async e => {
-    const background = await getBackground();
-    const features = Object.assign({}, background.profilerState.features, {
-      stackwalk: e.target.checked,
+/**
+ * This helper adds listeners to the features checkboxes that will adjust the profiler
+ * state when changed.
+ */
+function setupFeatureCheckbox(featureName) {
+  document
+    .querySelector(`.${featureName}-checkbox`)
+    .addEventListener('change', async e => {
+      const background = await getBackground();
+      const features = Object.assign({}, background.profilerState.features);
+      features[featureName] = e.target.checked;
+      background.adjustState({ features });
+      renderState(background.profilerState);
     });
-    background.adjustState({ features });
-    renderState(background.profilerState);
-  });
+}
 
-document.querySelector('.js-checkbox').addEventListener('change', async e => {
-  const background = await getBackground();
-  const features = Object.assign({}, background.profilerState.features, {
-    js: e.target.checked,
-  });
-  background.adjustState({ features });
-  renderState(background.profilerState);
-});
-
-document
-  .querySelector('.tasktracer-checkbox')
-  .addEventListener('change', async e => {
-    const background = await getBackground();
-    const features = Object.assign({}, background.profilerState.features, {
-      tasktracer: e.target.checked,
-    });
-    background.adjustState({ features });
-    renderState(background.profilerState);
-  });
+setupFeatureCheckbox('responsiveness');
+setupFeatureCheckbox('stackwalk');
+setupFeatureCheckbox('js');
+setupFeatureCheckbox('tasktracer');
 
 document
   .querySelector('.threads-textbox')
