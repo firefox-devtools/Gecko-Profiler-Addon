@@ -61,21 +61,18 @@ npm start
 
 If you want to package a new version of the add-on, you need to be registered as
 an author of the add-on on addons.mozilla.org. Otherwise you can ignore this
-section and ask Markus or Greg to do the packaging for you.
+section and ask @mstange or @gregtatum to do the packaging for you.
 
 If you are registered as an author of the add-on on addons.mozilla.org, you
-should have an API key and an API secret. I think you can ask addons.mozilla.org
-to generate those for you if you don't have them.
+should [use your API key and API secret](https://addons.mozilla.org/en-US/developers/addon/api/key/).
 
 Packaging a new version works like this:
 
  1. Commit your other changes first, so that the update can be its own changeset.
  2. Go to `manifest.json` and increment the version.
  3. Go to `updates.json` and do the same (the two need to match).
- 4. Make sure you have a somewhat recent version of `web-ext` installed, at least
-    version 2.3.0. You can install it using `npm install -g web-ext`.
- 5. Execute the following command, replacing `<api-key>` with your API key and `<api-secret>` with your API secret: `web-ext sign -i README.md package.json *.rdf transition resources --api-key <api-key> --api-secret <api-secret> && mv ./web-ext-artifacts/gecko_profiler*.xpi ./gecko_profiler.xpi`
-    (The `-i` in that command means "ignore".)
+ 4. Set your environment variables $AMO_JWT_ISSUER and $AMO_JWT_SECRET to the API key an API secret respectively.
+ 5. Run `npm run sign-extension'
  6. Commit the changes to `manifest.json`, `updates.json` and `gecko_profiler.xpi`
     with the commit message `Release <new version number>.`.
  7. Create a PR and merge.
