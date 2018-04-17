@@ -11,7 +11,7 @@
     "husky": "^0.13.3",
     "lint-staged": "^3.4.1",
     "prettier": "^1.3.1",
-    "web-ext": "^1.10.1"
+    "web-ext": "^2.6.0"
   },
   "repository": "https://github.com/devtools-html/Gecko-Profiler-Addon",
   "config": {
@@ -21,7 +21,8 @@
     "start": "web-ext run --firefox=$npm_package_config_firefox",
     "build": "web-ext build -i README.md package.json *.rdf transition resources",
     "prettier": "prettier --single-quote --trailing-comma es5 --write \"./!(node_modules)**/*.js\" *.js",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "sign-extensions": "web-ext sign -i README.md package.json *.rdf transition resources --api-key=$AMO_JWT_ISSUER --api-secret=$AMO_JWT_SECRET && mv ./web-ext-artifacts/gecko_profiler*.xpi ./gecko_profiler.xpi"
   },
   "lint-staged": {
     "*.js": [
