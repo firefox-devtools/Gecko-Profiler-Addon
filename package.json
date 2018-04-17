@@ -22,7 +22,7 @@
     "build": "web-ext build -i README.md package.json *.rdf transition resources",
     "prettier": "prettier --single-quote --trailing-comma es5 --write \"./!(node_modules)**/*.js\" *.js",
     "precommit": "lint-staged",
-    "sign-extensions": "web-ext sign -i README.md package.json *.rdf transition resources --api-key=$AMO_JWT_ISSUER --api-secret=$AMO_JWT_SECRET && mv ./web-ext-artifacts/gecko_profiler*.xpi ./gecko_profiler.xpi"
+    "sign-extension": "web-ext sign -i README.md package.json *.rdf transition resources --api-key=$AMO_JWT_ISSUER --api-secret=$AMO_JWT_SECRET && mv ./web-ext-artifacts/gecko_profiler*.xpi ./gecko_profiler.xpi"
   },
   "lint-staged": {
     "*.js": [
