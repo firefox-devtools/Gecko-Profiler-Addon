@@ -10,7 +10,9 @@
     "eslint-plugin-prettier": "^2.0.1",
     "husky": "^0.13.3",
     "lint-staged": "^3.4.1",
+    "npm-run-all": "^4.1.3",
     "prettier": "^1.3.1",
+    "shx": "^0.2.2",
     "web-ext": "^2.6.0"
   },
   "repository": "https://github.com/devtools-html/Gecko-Profiler-Addon",
@@ -22,7 +24,9 @@
     "build": "web-ext build -i README.md package.json *.rdf transition resources",
     "prettier": "prettier --single-quote --trailing-comma es5 --write \"./!(node_modules)**/*.js\" *.js",
     "precommit": "lint-staged",
-    "sign-extension": "web-ext sign -i README.md package.json *.rdf transition resources --api-key=$AMO_JWT_ISSUER --api-secret=$AMO_JWT_SECRET && mv ./web-ext-artifacts/gecko_profiler*.xpi ./gecko_profiler.xpi"
+    "sign-extension": "run-s sign-extension:step1 sign-extension:step2",
+    "sign-extension:step1": "web-ext sign -i README.md package.json *.rdf transition resources --api-key=$AMO_JWT_ISSUER --api-secret=$AMO_JWT_SECRET",
+    "sign-extension:step2": "shx mv ./web-ext-artifacts/gecko_profiler*.xpi ./gecko_profiler.xpi"
   },
   "lint-staged": {
     "*.js": [
