@@ -172,6 +172,7 @@ async function restartProfiler() {
         js: true,
         stackwalk: true,
         responsiveness: true,
+        trackopts: false,
         tasktracer: false,
       },
       threads: 'GeckoMain,Compositor',
