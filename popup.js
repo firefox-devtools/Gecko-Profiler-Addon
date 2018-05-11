@@ -38,6 +38,7 @@ function renderControls(state) {
   document.querySelector('.stackwalk-checkbox').value = state.stackwalk;
   document.querySelector('.responsiveness-checkbox').value =
     state.responsiveness;
+  document.querySelector('.trackopts-checkbox').value = state.trackopts;
   document.querySelector('.js-checkbox').value = state.js;
   document.querySelector('.tasktracer-checkbox').value = state.tasktracer;
   document.querySelector('.threads-textbox').value = state.threads;
@@ -214,6 +215,7 @@ setupFeatureCheckbox('responsiveness');
 setupFeatureCheckbox('stackwalk');
 setupFeatureCheckbox('js');
 setupFeatureCheckbox('tasktracer');
+setupFeatureCheckbox('trackopts');
 
 document
   .querySelector('.threads-textbox')
