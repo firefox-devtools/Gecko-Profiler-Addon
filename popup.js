@@ -23,9 +23,8 @@ function renderState(state) {
     discreteLevelNotch.classList.toggle('inactive', !isActive);
   }
   const information = calculateInformation(state);
-  document.querySelector(
-    '.relevancy-level-fill'
-  ).style.width = `${information * 100}%`;
+  document.querySelector('.relevancy-level-fill').style.width = `${information *
+    100}%`;
 
   renderControls(state);
 }
@@ -195,19 +194,20 @@ document
   });
 
 /**
- * This helper adds listeners to the features checkboxes that will adjust the profiler
- * state when changed.
+ * This helper initializes and adds listeners to the features checkboxes that
+ * will adjust the profiler state when changed.
  */
-function setupFeatureCheckbox(featureName) {
-  document
-    .querySelector(`.${featureName}-checkbox`)
-    .addEventListener('change', async e => {
-      const background = await getBackground();
-      const features = Object.assign({}, background.profilerState.features);
-      features[featureName] = e.target.checked;
-      background.adjustState({ features });
-      renderState(background.profilerState);
-    });
+async function setupFeatureCheckbox(featureName) {
+  const checkbox = document.querySelector(`.${featureName}-checkbox`);
+  const background = await getBackground();
+  checkbox.checked = background.profilerState.features[featureName];
+
+  checkbox.addEventListener('change', async e => {
+    const features = Object.assign({}, background.profilerState.features);
+    features[featureName] = e.target.checked;
+    background.adjustState({ features });
+    renderState(background.profilerState);
+  });
 }
 
 setupFeatureCheckbox('responsiveness');
