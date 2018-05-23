@@ -172,6 +172,7 @@ async function restartProfiler() {
         js: true,
         stackwalk: true,
         responsiveness: true,
+        seqstyle: false,
         trackopts: false,
         tasktracer: false,
       },

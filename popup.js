@@ -39,6 +39,7 @@ function renderControls(state) {
     state.responsiveness;
   document.querySelector('.trackopts-checkbox').value = state.trackopts;
   document.querySelector('.js-checkbox').value = state.js;
+  document.querySelector('.seqstyle-checkbox').value = state.seqstyle;
   document.querySelector('.tasktracer-checkbox').value = state.tasktracer;
   document.querySelector('.threads-textbox').value = state.threads;
 }
@@ -92,6 +93,7 @@ function calculateOverhead(state) {
   const overheadFromStackwalk = state.stackwalk ? 0.05 : 0;
   const overheadFromResponsiveness = state.responsiveness ? 0.05 : 0;
   const overheadFromJavaScrpt = state.js ? 0.05 : 0;
+  const overheadFromSeqStyle = state.seqstyle ? 0.05 : 0;
   const overheadFromTaskTracer = state.tasktracer ? 0.05 : 0;
   return clamp(
     overheadFromSampling +
@@ -99,6 +101,7 @@ function calculateOverhead(state) {
       overheadFromStackwalk +
       overheadFromResponsiveness +
       overheadFromJavaScrpt +
+      overheadFromSeqStyle +
       overheadFromTaskTracer,
     0,
     1
@@ -123,6 +126,7 @@ function calculateInformation(state) {
   const informationFromStackwalk = state.stackwalk ? 0.1 : 0;
   const informationFromResponsiveness = state.responsiveness ? 0.1 : 0;
   const informationFromJavaScrpt = state.js ? 0.1 : 0;
+  const informationFromSeqStyle = state.seqstyle ? 0.1 : 0;
   const informationFromTaskTracer = state.tasktracer ? 0.1 : 0;
   return clamp(
     informationFromSampling +
@@ -130,6 +134,7 @@ function calculateInformation(state) {
       informationFromStackwalk +
       informationFromResponsiveness +
       informationFromJavaScrpt +
+      informationFromSeqStyle +
       informationFromTaskTracer,
     0,
     1
@@ -214,6 +219,7 @@ async function setupFeatureCheckbox(featureName) {
 setupFeatureCheckbox('responsiveness');
 setupFeatureCheckbox('stackwalk');
 setupFeatureCheckbox('js');
+setupFeatureCheckbox('seqstyle');
 setupFeatureCheckbox('tasktracer');
 setupFeatureCheckbox('trackopts');
 
