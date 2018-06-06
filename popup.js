@@ -34,6 +34,7 @@ function renderControls(state) {
     intervalScale.fromValueToFraction(state.interval) * 100;
   document.querySelector('.buffersize-range').value =
     buffersizeScale.fromValueToFraction(state.buffersize) * 100;
+  document.querySelector('.collecturls-checkbox').value = state.collecturls;
   document.querySelector('.stackwalk-checkbox').value = state.stackwalk;
   document.querySelector('.responsiveness-checkbox').value =
     state.responsiveness;
@@ -216,6 +217,7 @@ async function setupFeatureCheckbox(featureName) {
   });
 }
 
+setupFeatureCheckbox('collecturls');
 setupFeatureCheckbox('responsiveness');
 setupFeatureCheckbox('stackwalk');
 setupFeatureCheckbox('js');
