@@ -169,7 +169,7 @@ async function restartProfiler() {
       buffersize: 10000000, // 90MB
       interval: 1,
       features: {
-        collecturls: false,
+        collectnetworkurls: false,
         js: true,
         stackwalk: true,
         responsiveness: true,
