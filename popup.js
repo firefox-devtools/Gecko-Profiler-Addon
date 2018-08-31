@@ -39,6 +39,7 @@ function renderControls(state) {
     state.responsiveness;
   document.querySelector('.trackopts-checkbox').value = state.trackopts;
   document.querySelector('.js-checkbox').value = state.js;
+  document.querySelector('.screenshots-checkbox').value = state.screenshots;
   document.querySelector('.seqstyle-checkbox').value = state.seqstyle;
   document.querySelector('.tasktracer-checkbox').value = state.tasktracer;
   document.querySelector('.threads-textbox').value = state.threads;
@@ -219,6 +220,7 @@ async function setupFeatureCheckbox(featureName) {
 setupFeatureCheckbox('responsiveness');
 setupFeatureCheckbox('stackwalk');
 setupFeatureCheckbox('js');
+setupFeatureCheckbox('screenshots');
 setupFeatureCheckbox('seqstyle');
 setupFeatureCheckbox('tasktracer');
 setupFeatureCheckbox('trackopts');
