@@ -175,6 +175,7 @@ async function restartProfiler() {
         seqstyle: false,
         trackopts: false,
         tasktracer: false,
+        screenshots: false,
       },
       threads: 'GeckoMain,Compositor',
       reportUrl: 'https://perf-html.io/from-addon/',
