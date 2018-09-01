@@ -163,6 +163,14 @@ async function restartProfiler() {
 
   if (!window.profilerState) {
     window.profilerState = {};
+
+    // Screenshots are currently only working on mac.
+    let enableScreenshots = false;
+    let platform = await browser.runtime.getPlatformInfo();
+    if (platform.os == 'mac') {
+      enableScreenshots = true;
+    }
+
     adjustState({
       isRunning: false,
       settingsOpen: false,
@@ -175,7 +183,7 @@ async function restartProfiler() {
         seqstyle: false,
         trackopts: false,
         tasktracer: false,
-        screenshots: false,
+        screenshots: enableScreenshots,
       },
       threads: 'GeckoMain,Compositor',
       reportUrl: 'https://perf-html.io/from-addon/',
