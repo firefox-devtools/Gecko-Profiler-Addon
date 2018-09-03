@@ -167,7 +167,7 @@ async function restartProfiler() {
     // Screenshots are currently only working on mac.
     let enableScreenshots = false;
     let platform = await browser.runtime.getPlatformInfo();
-    if (platform.os == 'mac') {
+    if (platform.os === 'mac') {
       enableScreenshots = true;
     }
 
