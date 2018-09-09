@@ -57,14 +57,6 @@ async function createAndWaitForTab(url) {
   return tabPromise;
 }
 
-async function listenOnceForConnect(name) {
-  window.connectDeferred[name] = {};
-  window.connectDeferred[name].promise = new Promise((resolve, reject) => {
-    Object.assign(window.connectDeferred[name], { resolve, reject });
-  });
-  return await window.connectDeferred[name].promise;
-}
-
 function getProfilePreferablyAsArrayBuffer() {
   // This is a compatibility wrapper for Firefox builds from before 1362800
   // landed. We can remove it once Nightly switches to 56.
@@ -122,7 +114,6 @@ async function captureProfile() {
  */
 function getEnabledFeatures(features, threads) {
   const enabledFeatures = Object.keys(features).filter(f => features[f]);
-  enabledFeatures.push('leaf');
   if (threads.length > 0) {
     enabledFeatures.push('threads');
   }
@@ -164,11 +155,31 @@ async function restartProfiler() {
   if (!window.profilerState) {
     window.profilerState = {};
 
-    // Screenshots are currently only working on mac.
-    let enableScreenshots = false;
-    let platform = await browser.runtime.getPlatformInfo();
-    if (platform.os === 'mac') {
-      enableScreenshots = true;
+    const features = {
+      java: false,
+      js: true,
+      leaf: true,
+      mainthreadio: false,
+      memory: false,
+      privacy: false,
+      responsiveness: true,
+      screenshots: false,
+      seqstyle: false,
+      stackwalk: true,
+      tasktracer: false,
+      trackopts: false,
+    };
+
+    const platform = await browser.runtime.getPlatformInfo();
+    switch (platform.os) {
+      case 'mac':
+        // Screenshots are currently only working on mac.
+        features.screenshots = true;
+        break;
+      case 'android':
+        // Java profiling is only meaningful on android.
+        features.java = true;
+        break;
     }
 
     adjustState({
@@ -176,15 +187,7 @@ async function restartProfiler() {
       settingsOpen: false,
       buffersize: 10000000, // 90MB
       interval: 1,
-      features: {
-        js: true,
-        stackwalk: true,
-        responsiveness: true,
-        seqstyle: false,
-        trackopts: false,
-        tasktracer: false,
-        screenshots: enableScreenshots,
-      },
+      features,
       threads: 'GeckoMain,Compositor',
       reportUrl: 'https://perf-html.io/from-addon/',
     });
