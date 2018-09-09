@@ -3,6 +3,38 @@ const buffersizeScale = makeExponentialScale(10000, 100000000);
 
 const PROFILE_ENTRY_SIZE = 9; // sizeof(double) + sizeof(char), http://searchfox.org/mozilla-central/rev/e8835f52eff29772a57dca7bcc86a9a312a23729/tools/profiler/core/ProfileEntry.h#73
 
+const featurePrefix = 'perf-settings-feature-checkbox-';
+const features = [
+  'java',
+  'js',
+  'leaf',
+  'mainthreadio',
+  'memory',
+  'privacy',
+  'responsiveness',
+  'screenshots',
+  'seqstyle',
+  'stackwalk',
+  'tasktracer',
+  'trackopts',
+];
+const threadPrefix = 'perf-settings-thread-checkbox-';
+// A map of element ID suffixes to their corresponding profile thread name, for
+// creating ID -> name mappings, e.g.`$threadPrefix}dom-worker` - DOM Worker.
+const threadMap = {
+  compositor: 'Compositor',
+  'dns-resolver': 'DNS Resolver',
+  'dom-worker': 'DOM Worker',
+  'gecko-main': 'GeckoMain',
+  'img-decoder': 'ImgDecoder',
+  'paint-worker': 'PaintWorker',
+  'render-backend': 'RenderBackend',
+  renderer: 'Renderer',
+  'socket-thread': 'Socket Thread',
+  'stream-trans': 'StreamTrans',
+  'style-thread': 'StyleThread',
+};
+
 function renderState(state) {
   const { isRunning, settingsOpen, interval, buffersize } = state;
   document.documentElement.classList.toggle('status-running', isRunning);
@@ -22,9 +54,6 @@ function renderState(state) {
     discreteLevelNotch.classList.toggle('active', isActive);
     discreteLevelNotch.classList.toggle('inactive', !isActive);
   }
-  const information = calculateInformation(state);
-  document.querySelector('.relevancy-level-fill').style.width = `${information *
-    100}%`;
 
   renderControls(state);
 }
@@ -34,15 +63,18 @@ function renderControls(state) {
     intervalScale.fromValueToFraction(state.interval) * 100;
   document.querySelector('.buffersize-range').value =
     buffersizeScale.fromValueToFraction(state.buffersize) * 100;
-  document.querySelector('.stackwalk-checkbox').value = state.stackwalk;
-  document.querySelector('.responsiveness-checkbox').value =
-    state.responsiveness;
-  document.querySelector('.trackopts-checkbox').value = state.trackopts;
-  document.querySelector('.js-checkbox').value = state.js;
-  document.querySelector('.screenshots-checkbox').value = state.screenshots;
-  document.querySelector('.seqstyle-checkbox').value = state.seqstyle;
-  document.querySelector('.tasktracer-checkbox').value = state.tasktracer;
-  document.querySelector('.threads-textbox').value = state.threads;
+
+  for (let name of features) {
+    document.getElementById(featurePrefix + name).value = state[name];
+  }
+
+  for (let name in threadMap) {
+    document.getElementById(
+      threadPrefix + name
+    ).checked = state.threads.includes(threadMap[name]);
+  }
+
+  document.querySelector('#perf-settings-thread-text').value = state.threads;
 }
 
 function clamp(val, min, max) {
@@ -104,39 +136,6 @@ function calculateOverhead(state) {
       overheadFromJavaScrpt +
       overheadFromSeqStyle +
       overheadFromTaskTracer,
-    0,
-    1
-  );
-}
-
-function calculateInformation(state) {
-  const informationFromSampling = scaleRangeWithClamping(
-    Math.log(state.interval),
-    Math.log(0.1),
-    Math.log(100),
-    0.4,
-    0
-  );
-  const informationFromBuffersize = scaleRangeWithClamping(
-    Math.log(state.buffersize),
-    Math.log(1000),
-    Math.log(10000000),
-    0,
-    0.3
-  );
-  const informationFromStackwalk = state.stackwalk ? 0.1 : 0;
-  const informationFromResponsiveness = state.responsiveness ? 0.1 : 0;
-  const informationFromJavaScrpt = state.js ? 0.1 : 0;
-  const informationFromSeqStyle = state.seqstyle ? 0.1 : 0;
-  const informationFromTaskTracer = state.tasktracer ? 0.1 : 0;
-  return clamp(
-    informationFromSampling +
-      informationFromBuffersize +
-      informationFromStackwalk +
-      informationFromResponsiveness +
-      informationFromJavaScrpt +
-      informationFromSeqStyle +
-      informationFromTaskTracer,
     0,
     1
   );
@@ -204,38 +203,85 @@ document
  * This helper initializes and adds listeners to the features checkboxes that
  * will adjust the profiler state when changed.
  */
-async function setupFeatureCheckbox(featureName) {
+async function setupFeatureCheckbox(name) {
+  const platform = await browser.runtime.getPlatformInfo();
   // Screenshots are currently only working on mac.
-  if (featureName == 'screenshots') {
-    let platform = await browser.runtime.getPlatformInfo();
+  if (name == 'screenshots') {
     if (platform.os !== 'mac') {
       document.querySelector('#screenshots').style.display = 'none';
       return;
     }
   }
+  // Java profiling is only meaningful on android.
+  if (name == 'java') {
+    if (platform.os !== 'android') {
+      document.querySelector('#java').style.display = 'none';
+      return;
+    }
+  }
 
-  const checkbox = document.querySelector(`.${featureName}-checkbox`);
+  const checkbox = document.querySelector(`#${featurePrefix}${name}`);
   const background = await getBackground();
-  checkbox.checked = background.profilerState.features[featureName];
+  checkbox.checked = background.profilerState.features[name];
 
   checkbox.addEventListener('change', async e => {
     const features = Object.assign({}, background.profilerState.features);
-    features[featureName] = e.target.checked;
+    features[name] = e.target.checked;
     background.adjustState({ features });
     renderState(background.profilerState);
   });
 }
 
-setupFeatureCheckbox('responsiveness');
-setupFeatureCheckbox('stackwalk');
-setupFeatureCheckbox('js');
-setupFeatureCheckbox('screenshots');
-setupFeatureCheckbox('seqstyle');
-setupFeatureCheckbox('tasktracer');
-setupFeatureCheckbox('trackopts');
+/**
+ * This helper initializes and adds listeners to the threads checkboxes that
+ * will adjust the profiler state when changed.
+ */
+async function setupThreadCheckbox(name) {
+  const checkbox = document.querySelector(`#${threadPrefix}${name}`);
+  const background = await getBackground();
+  checkbox.checked = background.profilerState.threads.includes(threadMap[name]);
+
+  checkbox.addEventListener('change', async e => {
+    let threads = background.profilerState.threads;
+    if (e.target.checked) {
+      threads += ',' + e.target.value;
+    } else {
+      threads = threadTextToList(threads)
+        .filter(thread => thread !== e.target.value)
+        .join(',');
+    }
+    background.adjustState({ threads });
+    renderState(background.profilerState);
+  });
+}
+
+/**
+ * Clean up the thread list string into a list of values.
+ * @param string threads, comma separated values.
+ * @return Array list of thread names
+ */
+function threadTextToList(threads) {
+  return (
+    threads
+      // Split on commas
+      .split(',')
+      // Clean up any extraneous whitespace
+      .map(string => string.trim())
+      // Filter out any blank strings
+      .filter(string => string)
+  );
+}
+
+for (let name of features) {
+  setupFeatureCheckbox(name);
+}
+
+for (let name in threadMap) {
+  setupThreadCheckbox(name);
+}
 
 document
-  .querySelector('.threads-textbox')
+  .querySelector('#perf-settings-thread-text')
   .addEventListener('change', async e => {
     const background = await getBackground();
     background.adjustState({ threads: e.target.value });
