@@ -272,11 +272,11 @@ function threadTextToList(threads) {
   );
 }
 
-for (let name of features) {
+for (const name of features) {
   setupFeatureCheckbox(name);
 }
 
-for (let name in threadMap) {
+for (const name in threadMap) {
   setupThreadCheckbox(name);
 }
 
