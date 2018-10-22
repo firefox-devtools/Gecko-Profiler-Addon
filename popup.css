@@ -12,7 +12,7 @@ html {
 
 body {
   margin: 0;
-  width: 400px;
+  max-width: 32em;
 }
 
 .status-display {
@@ -371,6 +371,7 @@ kbd {
 .perf-settings-feature-label {
   margin: 8px 0;
   display: flex;
+  flex-wrap: wrap;
 }
 
 .perf-settings-checkbox {
@@ -378,7 +379,8 @@ kbd {
 }
 
 .perf-settings-feature-title {
-  flex: 1;
+  margin-left: 20px;
+  flex: 1 100%;
   line-height: 1.6;
 }
 
