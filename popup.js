@@ -1,5 +1,6 @@
 const intervalScale = makeExponentialScale(0.01, 100);
 const buffersizeScale = makeExponentialScale(10000, 100000000);
+const bufferdurationScale = makeExponentialScale(1, 200);
 
 const PROFILE_ENTRY_SIZE = 9; // sizeof(double) + sizeof(char), http://searchfox.org/mozilla-central/rev/e8835f52eff29772a57dca7bcc86a9a312a23729/tools/profiler/core/ProfileEntry.h#73
 
@@ -36,7 +37,13 @@ const threadMap = {
 };
 
 function renderState(state) {
-  const { isRunning, settingsOpen, interval, buffersize } = state;
+  const {
+    isRunning,
+    settingsOpen,
+    interval,
+    buffersize,
+    bufferduration,
+  } = state;
   document.documentElement.classList.toggle('status-running', isRunning);
   document.documentElement.classList.toggle('status-stopped', !isRunning);
   document.querySelector('.settings').classList.toggle('open', settingsOpen);
@@ -44,6 +51,9 @@ function renderState(state) {
   document.querySelector('.buffersize-value').textContent = prettyBytes(
     buffersize * PROFILE_ENTRY_SIZE
   );
+  document.querySelector(
+    '.bufferduration-value'
+  ).textContent = `${bufferduration} sec`;
   const overhead = calculateOverhead(state);
   const overheadDiscreteContainer = document.querySelector('.discrete-level');
   for (let i = 0; i < overheadDiscreteContainer.children.length; i++) {
@@ -63,6 +73,8 @@ function renderControls(state) {
     intervalScale.fromValueToFraction(state.interval) * 100;
   document.querySelector('.buffersize-range').value =
     buffersizeScale.fromValueToFraction(state.buffersize) * 100;
+  document.querySelector('.bufferduration-range').value =
+    bufferdurationScale.fromValueToFraction(state.bufferduration) * 100;
 
   for (let name of features) {
     document.getElementById(featurePrefix + name).value = state[name];
@@ -195,6 +207,17 @@ document
     const frac = e.target.value / 100;
     background.adjustState({
       buffersize: buffersizeScale.fromFractionToSingleDigitValue(frac),
+    });
+    renderState(background.profilerState);
+  });
+
+document
+  .querySelector('.bufferduration-range')
+  .addEventListener('input', async e => {
+    const background = await getBackground();
+    const frac = e.target.value / 100;
+    background.adjustState({
+      bufferduration: bufferdurationScale.fromFractionToSingleDigitValue(frac),
     });
     renderState(background.profilerState);
   });

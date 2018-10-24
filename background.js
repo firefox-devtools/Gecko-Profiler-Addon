@@ -128,6 +128,7 @@ async function startProfiler() {
   const threads = settings.threads.split(',');
   const options = {
     bufferSize: settings.buffersize,
+    bufferDuration: settings.bufferduration,
     interval: settings.interval,
     features: getEnabledFeatures(settings.features, threads),
     threads,
@@ -186,6 +187,7 @@ async function restartProfiler() {
       isRunning: false,
       settingsOpen: false,
       buffersize: 10000000, // 90MB
+      bufferduration: 20, // 20sec
       interval: 1,
       features,
       threads: 'GeckoMain,Compositor',
