@@ -1,6 +1,11 @@
 const intervalScale = makeExponentialScale(0.01, 100);
 const buffersizeScale = makeExponentialScale(10000, 100000000);
-const infiniteWindowLength = 200;
+// Window Length accepts a numerical value between 1-N. We also need to put an
+// infinite number at the end of the window length slider. Therefore, the max
+// value pretends like it's infinite in the slider.
+// The maximum value of window length is 300 seconds. For that reason, we are
+// treating 400 as infinity.
+const infiniteWindowLength = 400;
 const windowLengthScale = makeExponentialScale(1, infiniteWindowLength);
 
 const PROFILE_ENTRY_SIZE = 9; // sizeof(double) + sizeof(char), http://searchfox.org/mozilla-central/rev/e8835f52eff29772a57dca7bcc86a9a312a23729/tools/profiler/core/ProfileEntry.h#73
@@ -46,9 +51,8 @@ function renderState(state) {
   document.querySelector('.buffersize-value').textContent = prettyBytes(
     buffersize * PROFILE_ENTRY_SIZE
   );
-  document.querySelector('.windowlength-value').textContent = `${
-    windowLength === infiniteWindowLength ? '∞' : windowLength
-  } sec`;
+  document.querySelector('.windowlength-value').textContent =
+    windowLength === infiniteWindowLength ? `∞` : `${windowLength} sec`;
   const overhead = calculateOverhead(state);
   const overheadDiscreteContainer = document.querySelector('.discrete-level');
   for (let i = 0; i < overheadDiscreteContainer.children.length; i++) {
@@ -218,16 +222,12 @@ document
   });
 
 window.onload = async () => {
-  const windowLengthVisibility =
-    browser.geckoProfiler.supports &&
-    browser.geckoProfiler.supports.WINDOWLENGTH
-      ? 'flex'
-      : 'none';
-  document
-    .querySelectorAll(
-      '.settings-setting-label.windowlength, .range-with-value.windowlength'
-    )
-    .forEach(el => (el.style.display = windowLengthVisibility));
+  if (
+    !browser.geckoProfiler.supports ||
+    !browser.geckoProfiler.supports.WINDOWLENGTH
+  ) {
+    document.body.classList.add('no-windowlength');
+  }
 
   // Letting the background script know how the infiniteWindowLength is represented.
   const background = await getBackground();

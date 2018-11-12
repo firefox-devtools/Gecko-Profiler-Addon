@@ -283,6 +283,11 @@ kbd {
   flex-flow: row nowrap;
 }
 
+body.no-windowlength .settings-setting-label.windowlength,
+body.no-windowlength .range-with-value.windowlength {
+  display: none;
+}
+
 .range-input {
   margin: 0;
   width: 0;
