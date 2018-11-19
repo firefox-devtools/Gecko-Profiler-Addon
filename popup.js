@@ -205,9 +205,8 @@ document
  */
 async function setupFeatureCheckbox(name) {
   const platform = await browser.runtime.getPlatformInfo();
-  // Screenshots are currently only working on mac.
   if (name == 'screenshots') {
-    if (platform.os !== 'mac') {
+    if (platform.os !== 'mac' && platform.os !== 'linux') {
       document.querySelector('#screenshots').style.display = 'none';
       return;
     }
