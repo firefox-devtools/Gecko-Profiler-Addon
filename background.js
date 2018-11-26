@@ -132,6 +132,15 @@ async function startProfiler() {
     features: getEnabledFeatures(settings.features, threads),
     threads,
   };
+  if (
+    browser.geckoProfiler.supports &&
+    browser.geckoProfiler.supports.WINDOWLENGTH
+  ) {
+    options.windowLength =
+      settings.windowLength !== settings.infiniteWindowLength
+        ? settings.windowLength
+        : 0;
+  }
   await browser.geckoProfiler.start(options);
 }
 
@@ -187,6 +196,7 @@ async function restartProfiler() {
       isRunning: false,
       settingsOpen: false,
       buffersize: 10000000, // 90MB
+      windowLength: 20, // 20sec
       interval: 1,
       features,
       threads: 'GeckoMain,Compositor',
