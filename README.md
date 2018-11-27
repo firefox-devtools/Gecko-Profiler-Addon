@@ -26,37 +26,23 @@ If you want to run your own perf-html instance or want profiles to be sent to a 
 
 ## Development
 
-Make sure you have somewhat recent versions of node and npm installed. Then:
+Make sure you have somewhat recent versions of node and yarn installed. Then:
 
 ```bash
 $ git clone https://github.com/devtools-html/Gecko-Profiler-Addon/
 $ cd Gecko-Profiler-Addon/
-$ npm install
-$ npm start
+$ yarn install
+$ yarn start
 ```
 
-The `npm start` command runs [Firefox Nightly](http://nightly.mozilla.org/) by default. To run other releases of Firefox use the following `npm start` commands.
-
-#### [Beta Firefox](https://www.mozilla.org/en-US/firefox/channel/desktop/#beta)
+The `yarn start` command runs [Firefox Nightly](http://nightly.mozilla.org/) by default. To run other releases of Firefox you can configure it using the command:
 
 ```bash
-npm start --geckoprofiler:firefox=beta
+yarn config set geckoprofiler:firefox beta
+yarn start
 ```
 
-#### [Release Firefox](https://www.mozilla.org/firefox/)
-
-```bash
-npm start --geckoprofiler:firefox=firefox
-```
-
-#### Release config
-
-Or you can set the local config to keep the default for the life of your local repository and no longer need to pass the config on the command line.
-
-```bash
-npm config set geckoprofiler:firefox beta
-npm start
-```
+Note that on some platforms (eg: Linux) you'll rather specify the full path to Firefox.
 
 ## Packaging a new version
 
@@ -73,7 +59,7 @@ Packaging a new version works like this:
  2. Go to `manifest.json` and increment the version.
  3. Go to `updates.json` and do the same (the two need to match).
  4. Set your environment variables $AMO_JWT_ISSUER and $AMO_JWT_SECRET to the API key an API secret respectively.
- 5. Run `npm run sign-extension'
+ 5. Run `yarn sign-extension'
  6. Commit the changes to `manifest.json`, `updates.json` and `gecko_profiler.xpi`
     with the commit message `Release <new version number>.`.
  7. Create a PR and merge.
