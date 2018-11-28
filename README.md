@@ -59,7 +59,7 @@ Packaging a new version works like this:
  2. Go to `manifest.json` and increment the version.
  3. Go to `updates.json` and do the same (the two need to match).
  4. Set your environment variables $AMO_JWT_ISSUER and $AMO_JWT_SECRET to the API key an API secret respectively.
- 5. Run `yarn sign-extension'
+ 5. Run `yarn sign-extension`
  6. Commit the changes to `manifest.json`, `updates.json` and `gecko_profiler.xpi`
     with the commit message `Release <new version number>.`.
  7. Create a PR and merge.
