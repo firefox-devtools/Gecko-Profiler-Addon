@@ -4,9 +4,9 @@ This add-on lets you collect profiles from Firefox, and open those profiles in [
 
 ## Installation
 
-The easiest way to install it is to go to [https://perf-html.io/](https://perf-html.io/) and click the link on there.
+Most users install it from [https://perf-html.io/](https://perf-html.io/) and click the link on there.
 
-Doing so will install the file `gecko_profiler.xpi` from this repository.
+It's also possible to install it directly from this repository by first downloading the file [`gecko_profiler.xpi`](./gecko_profiler.xpi?raw=true) to your local computer, and then drag and drop it to the Firefox window to install it.
 
 ## Usage
 
