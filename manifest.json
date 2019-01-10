@@ -55,14 +55,18 @@
     "geckoProfiler",
     "webNavigation",
     "storage",
-    "https://perf-html.io/*"
+    "https://perf-html.io/*",
+    "https://profiler.firefox.com/*"
   ],
   "optional_permissions": [
     "<all_urls>"
   ],
   "content_scripts": [
     {
-      "matches": ["https://perf-html.io/"],
+      "matches": [
+        "https://perf-html.io/",
+        "https://profiler.firefox.com/"
+      ],
       "js": ["content-home.js"]
     }
   ]
