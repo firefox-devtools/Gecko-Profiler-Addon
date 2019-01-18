@@ -25,7 +25,7 @@
     "prettier": "prettier --single-quote --trailing-comma es5 --write \"./!(node_modules)**/*.js\" *.js",
     "precommit": "lint-staged",
     "sign-extension": "run-s sign-extension:step1 sign-extension:step2",
-    "sign-extension:step1": "web-ext sign -i README.md package.json *.rdf transition resources --api-key=$AMO_JWT_ISSUER --api-secret=$AMO_JWT_SECRET",
+    "sign-extension:step1": "web-ext sign -i README.md package.json *.rdf transition resources yarn.lock --api-key=$AMO_JWT_ISSUER --api-secret=$AMO_JWT_SECRET",
     "sign-extension:step2": "shx mv ./web-ext-artifacts/gecko_profiler*.xpi ./gecko_profiler.xpi"
   },
   "lint-staged": {
