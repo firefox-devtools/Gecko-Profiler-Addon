@@ -215,6 +215,10 @@ async function restartProfiler() {
       path: isRunning ? 'icons/toolbar_on.png' : null,
     });
 
+    browser.browserAction.setTitle({
+      title: isRunning ? 'Gecko Profiler (on)' : null,
+    });
+
     for (const popup of browser.extension.getViews({ type: 'popup' })) {
       popup.renderState(window.profilerState);
     }
