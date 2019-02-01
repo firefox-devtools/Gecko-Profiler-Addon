@@ -13,7 +13,7 @@
   "browser_action": {
     "browser_style": false,
     "default_popup": "popup.html",
-    "default_title": "Gecko Profiler",
+    "default_title": "Gecko Profiler (off)",
     "default_icon": "icons/toolbar_off.png",
     "theme_icons": [
       {
