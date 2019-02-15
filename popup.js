@@ -52,8 +52,10 @@ function renderState(state) {
   document.querySelector('.buffersize-value').textContent = prettyBytes(
     buffersize * PROFILE_ENTRY_SIZE
   );
-  document.querySelector('.windowlength-value').textContent =
-    windowLength === infiniteWindowLength ? `∞` : `${windowLength} sec`;
+  document.querySelector('.windowlength-value').textContent = windowLength ===
+    infiniteWindowLength
+    ? `∞`
+    : `${windowLength} sec`;
   const overhead = calculateOverhead(state);
   const overheadDiscreteContainer = document.querySelector('.discrete-level');
   for (let i = 0; i < overheadDiscreteContainer.children.length; i++) {
@@ -245,12 +247,7 @@ window.onload = async () => {
  */
 async function setupFeatureCheckbox(name) {
   const platform = await browser.runtime.getPlatformInfo();
-  if (name == 'screenshots') {
-    if (platform.os !== 'mac' && platform.os !== 'linux') {
-      document.querySelector('#screenshots').style.display = 'none';
-      return;
-    }
-  }
+
   // Java profiling is only meaningful on android.
   if (name == 'java') {
     if (platform.os !== 'android') {
