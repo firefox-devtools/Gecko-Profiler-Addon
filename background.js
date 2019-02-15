@@ -1,11 +1,12 @@
 /* global browser */
 
-const DEFAULT_VIEWER_URL = 'https://perf-html.io';
+const DEFAULT_VIEWER_URL = 'https://profiler.firefox.com';
 
 const tabToConnectionMap = new Map();
 
 var profilerState;
 var profileViewerURL = DEFAULT_VIEWER_URL;
+var isMigratedToNewUrl;
 
 function adjustState(newState) {
   // Deep clone the object, since this can be called through popup.html,
@@ -155,11 +156,31 @@ async function restartProfiler() {
 }
 
 (async () => {
-  // Assign to global variables:
-  ({ profilerState, profileViewerURL } = await browser.storage.local.get({
+  const storageResults = await browser.storage.local.get({
     profilerState: null,
     profileViewerURL: DEFAULT_VIEWER_URL,
-  }));
+    // This value is to check whether or not folks have been migrated from
+    // perf-html.io to profiler.firefox.com
+    isMigratedToNewUrl: false,
+  });
+
+  // Assign to global variables:
+  window.profilerState = storageResults.profilerState;
+  window.profileViewerURL = storageResults.profileViewerURL;
+
+  if (!storageResults.isMigratedToNewUrl) {
+    if (window.profileViewerURL.startsWith('https://perf-html.io')) {
+      // This user needs to be migrated from perf-html.io to profiler.firefox.com.
+      // This is only done one time.
+      window.profileViewerURL = DEFAULT_VIEWER_URL;
+    }
+    // Store the fact that this migration check has been done, and optionally update
+    // the url if it was changed.
+    await browser.storage.local.set({
+      isMigratedToNewUrl: true,
+      profileViewerURL: window.profileViewerURL,
+    });
+  }
 
   if (!window.profilerState) {
     window.profilerState = {};
@@ -200,7 +221,6 @@ async function restartProfiler() {
       interval: 1,
       features,
       threads: 'GeckoMain,Compositor',
-      reportUrl: 'https://perf-html.io/from-addon/',
     });
   }
 

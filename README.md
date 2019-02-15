@@ -1,10 +1,10 @@
 # Gecko Profiler
 
-This add-on lets you collect profiles from Firefox, and open those profiles in [perf-html](https://perf-html.io/).
+This add-on lets you collect profiles from Firefox, and open those profiles in [profiler.firefox.com](https://profiler.firefox.com/).
 
 ## Installation
 
-Most users install it from [https://perf-html.io/](https://perf-html.io/) and click the link on there.
+Most users install it from [https://profiler.firefox.com/](https://profiler.firefox.com/) and click the link on there.
 
 It's also possible to install it directly from this repository by first downloading the file [`gecko_profiler.xpi`](./gecko_profiler.xpi?raw=true) to your local computer. Then drag and drop it to the Firefox window to install it.
 
@@ -20,7 +20,7 @@ That means that you can leave the profiler running, and collect a snapshot of th
 You can control the profiler with two keyboard shortcuts:
 
  - <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>1</kbd>: Stop / Restart profiling
- - <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>2</kbd>: Capture the profile. This captures the current contents of the profiler buffer, opens a tab with perf-html at `https://perf-html.io/`, and sends the profile to it.
+ - <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>2</kbd>: Capture the profile. This captures the current contents of the profiler buffer, opens a tab with perf-html at `https://profiler.firefox.com/`, and sends the profile to it.
 
 If you want to run your own perf-html instance or want profiles to be sent to a different site that you're developing, you can change the “Reporter URL” preference of this add-on on `about:addons`.
 

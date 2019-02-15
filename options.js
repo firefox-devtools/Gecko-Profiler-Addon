@@ -1,5 +1,5 @@
 const DEFAULT_OPTIONS = {
-  profileViewerURL: 'https://perf-html.io',
+  profileViewerURL: 'https://profiler.firefox.com',
 };
 let currentOptions;
 
