@@ -1,6 +1,7 @@
 /* global browser */
 
 const DEFAULT_VIEWER_URL = 'https://profiler.firefox.com';
+const DEFAULT_WINDOW_LENGTH = 20; // 20sec
 
 const tabToConnectionMap = new Map();
 
@@ -217,10 +218,17 @@ async function restartProfiler() {
       isRunning: false,
       settingsOpen: false,
       buffersize: 10000000, // 90MB
-      windowLength: 20, // 20sec
+      windowLength: DEFAULT_WINDOW_LENGTH,
       interval: 1,
       features,
       threads: 'GeckoMain,Compositor',
+    });
+  } else if (window.profilerState.windowLength === undefined) {
+    // We have `windowprofilerState` but no `windowLength`.
+    // That means we've upgraded the gecko profiler addon from an older version.
+    // Adding the default window legth in that case.
+    adjustState({
+      windowLength: DEFAULT_WINDOW_LENGTH,
     });
   }
 
