@@ -5,11 +5,11 @@
  */
 const injectScript = document.createElement('script');
 const injectFunction = () => {
-  // Let perf.html know that the addon is installed.
+  // Let Firefox Profiler know that the addon is installed.
   window.isGeckoProfilerAddonInstalled = true;
 
   if (window.geckoProfilerAddonInstalled) {
-    // In case the add-on was enabled while perf.html was open, notify it that the add-on
+    // In case the add-on was enabled while Firefox Profiler was open, notify it that the add-on
     // was installed.
     window.geckoProfilerAddonInstalled();
   }

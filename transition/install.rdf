@@ -9,7 +9,7 @@
         <em:name>Gecko Profiler</em:name>
         <em:description>Collect platform profiles from Firefox Desktop.</em:description>
         <em:creator>Markus Stange &lt;mstange@themasta.com&gt;</em:creator>
-        <em:updateURL>https://raw.githubusercontent.com/devtools-html/Gecko-Profiler-Addon/master/gecko_profiler.update.rdf</em:updateURL>
+        <em:updateURL>https://raw.githubusercontent.com/firefox-devtools/Gecko-Profiler-Addon/master/gecko_profiler.update.rdf</em:updateURL>
         <em:multiprocessCompatible>true</em:multiprocessCompatible>
 
         <em:targetApplication>
