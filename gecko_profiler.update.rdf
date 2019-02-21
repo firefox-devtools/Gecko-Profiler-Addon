@@ -12,7 +12,7 @@
                               <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
                               <em:minVersion>38.0a1</em:minVersion>
                               <em:maxVersion>54.*</em:maxVersion>
-                              <em:updateLink>https://raw.githubusercontent.com/devtools-html/Gecko-Profiler-Addon/master/gecko_profiler_legacy.xpi</em:updateLink>
+                              <em:updateLink>https://raw.githubusercontent.com/firefox-devtools/Gecko-Profiler-Addon/master/gecko_profiler_legacy.xpi</em:updateLink>
                             </Description>
                           </em:targetApplication>
                     </Description>
@@ -26,7 +26,7 @@
                               <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
                               <em:minVersion>55.0a1</em:minVersion>
                               <em:maxVersion>*</em:maxVersion>
-                              <em:updateLink>https://raw.githubusercontent.com/devtools-html/Gecko-Profiler-Addon/master/gecko_profiler_transition.xpi</em:updateLink>
+                              <em:updateLink>https://raw.githubusercontent.com/firefox-devtools/Gecko-Profiler-Addon/master/gecko_profiler_transition.xpi</em:updateLink>
                             </Description>
                           </em:targetApplication>
                     </Description>

@@ -20,16 +20,16 @@ That means that you can leave the profiler running, and collect a snapshot of th
 You can control the profiler with two keyboard shortcuts:
 
  - <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>1</kbd>: Stop / Restart profiling
- - <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>2</kbd>: Capture the profile. This captures the current contents of the profiler buffer, opens a tab with perf-html at `https://profiler.firefox.com/`, and sends the profile to it.
+ - <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>2</kbd>: Capture the profile. This captures the current contents of the profiler buffer, opens a tab with Firefox Profiler at `https://profiler.firefox.com/`, and sends the profile to it.
 
-If you want to run your own perf-html instance or want profiles to be sent to a different site that you're developing, you can change the “Reporter URL” preference of this add-on on `about:addons`.
+If you want to run your own Firefox Profiler instance or want profiles to be sent to a different site that you're developing, you can change the “Reporter URL” preference of this add-on on `about:addons`.
 
 ## Development
 
 Make sure you have somewhat recent versions of node and yarn installed. Then:
 
 ```bash
-$ git clone https://github.com/devtools-html/Gecko-Profiler-Addon/
+$ git clone https://github.com/firefox-devtools/Gecko-Profiler-Addon/
 $ cd Gecko-Profiler-Addon/
 $ yarn install
 $ yarn start
@@ -64,12 +64,12 @@ Packaging a new version works like this:
     with the commit message `Release <new version number>.`.
  7. Create a PR and merge.
 
-Landing these changes in the `https://github.com/devtools-html/Gecko-Profiler-Addon/`
+Landing these changes in the `https://github.com/firefox-devtools/Gecko-Profiler-Addon/`
 repository will automatically cause existing installations of the add-on to update
 to the new version. This works because we specify the following URL as the
 `update_url` in `manifest.json`:
-`https://raw.githubusercontent.com/devtools-html/Gecko-Profiler-Addon/master/updates.json`. And that file contains the following "update link" URL:
-`https://raw.githubusercontent.com/devtools-html/Gecko-Profiler-Addon/master/gecko_profiler.xpi`
+`https://raw.githubusercontent.com/firefox-devtools/Gecko-Profiler-Addon/master/updates.json`. And that file contains the following "update link" URL:
+`https://raw.githubusercontent.com/firefox-devtools/Gecko-Profiler-Addon/master/gecko_profiler.xpi`
 This URL always points at the most recent `gecko_profiler.xpi` in the repository.
 
 ## Known issues

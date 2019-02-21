@@ -32,7 +32,7 @@
     "gecko": {
       "id": "geckoprofiler@mozilla.com",
       "strict_min_version": "55.0a1",
-      "update_url": "https://raw.githubusercontent.com/devtools-html/Gecko-Profiler-Addon/master/updates.json"
+      "update_url": "https://raw.githubusercontent.com/firefox-devtools/Gecko-Profiler-Addon/master/updates.json"
     }
   },
   "commands": {

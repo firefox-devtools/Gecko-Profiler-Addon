@@ -15,7 +15,7 @@
     "shx": "^0.2.2",
     "web-ext": "^2.6.0"
   },
-  "repository": "https://github.com/devtools-html/Gecko-Profiler-Addon",
+  "repository": "https://github.com/firefox-devtools/Gecko-Profiler-Addon",
   "config": {
     "firefox": "nightly"
   },
