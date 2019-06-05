@@ -59,10 +59,13 @@ async function createAndWaitForTab(url) {
   return tabPromise;
 }
 
-function getProfilePreferablyAsArrayBuffer() {
-  // This is a compatibility wrapper for Firefox builds from before 1362800
-  // landed. We can remove it once Nightly switches to 56.
-  if ('getProfileAsArrayBuffer' in browser.geckoProfiler) {
+// This is a compatibility wrapper for Firefox builds from before bugs 1551992
+// (for getProfileAsGzippedArrayBuffer, available in version 69) and 1362800
+// (for getProfileAsArrayBuffer, available in version 56).
+function getProfilePreferablyAsGzippedArrayBuffer() {
+  if ('getProfileAsGzippedArrayBuffer' in browser.geckoProfiler) {
+    return browser.geckoProfiler.getProfileAsGzippedArrayBuffer();
+  } else if ('getProfileAsArrayBuffer' in browser.geckoProfiler) {
     return browser.geckoProfiler.getProfileAsArrayBuffer();
   }
   return browser.geckoProfiler.getProfile();
@@ -73,7 +76,7 @@ async function captureProfile() {
   // more samples while the parent process waits for subprocess profiles.
   await browser.geckoProfiler.pause().catch(() => {});
 
-  const profilePromise = getProfilePreferablyAsArrayBuffer().catch(
+  const profilePromise = getProfilePreferablyAsGzippedArrayBuffer().catch(
     e => (console.error(e), {})
   );
 
