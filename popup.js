@@ -24,6 +24,7 @@ const features = [
   'stackwalk',
   'tasktracer',
   'jstracer',
+  'preferencereads',
   'trackopts',
 ];
 const threadPrefix = 'perf-settings-thread-checkbox-';
@@ -52,10 +53,8 @@ function renderState(state) {
   document.querySelector('.buffersize-value').textContent = prettyBytes(
     buffersize * PROFILE_ENTRY_SIZE
   );
-  document.querySelector('.windowlength-value').textContent = windowLength ===
-    infiniteWindowLength
-    ? `∞`
-    : `${windowLength} sec`;
+  document.querySelector('.windowlength-value').textContent =
+    windowLength === infiniteWindowLength ? `∞` : `${windowLength} sec`;
   const overhead = calculateOverhead(state);
   const overheadDiscreteContainer = document.querySelector('.discrete-level');
   for (let i = 0; i < overheadDiscreteContainer.children.length; i++) {

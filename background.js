@@ -200,6 +200,7 @@ async function restartProfiler() {
       tasktracer: false,
       trackopts: false,
       jstracer: false,
+      preferencereads: false,
     };
 
     const platform = await browser.runtime.getPlatformInfo();
