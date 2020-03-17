@@ -1,3 +1,7 @@
+# Deprecation Notice
+
+Please notice that this add-on has been deprecated as of Firefox 76. The profiler is now built directly into the browser. Go to [profiler.firefox.com](https://profiler.firefox.com/) and click the button "Enable Profiler Menu Button" to enable the feature. If you had the add-on installed and enabled, then your Firefox profile will be automatically upgraded to use the new button.
+
 # Gecko Profiler
 
 This add-on lets you collect profiles from Firefox, and open those profiles in [profiler.firefox.com](https://profiler.firefox.com/).
